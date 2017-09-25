@@ -1,0 +1,76 @@
+﻿@model UniversalAPP.Web.PromptModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>消息提示 -- @Model.Status</title>
+    <link rel="shortcut icon" href="~/favicon.ico" />
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/lib/animate.css/animate.css" rel="stylesheet" />
+    <link href="~/css/admin/style.css" rel="stylesheet" />
+    <link href="~/css/admin/admin.css" rel="stylesheet" />
+
+    @if (Model.IsAutoLink)
+    {
+        if (Model.CountdownModel == 0)
+        {
+            <meta http-equiv="refresh" content="@Model.CountdownTime;URL=@Model.LinkUrl" />
+        }
+        else
+        {
+            <script type="text/javascript">
+        window.onload = function(){
+            var time = @Model.CountdownTime; //设置时间为几秒
+            var timer = document.getElementById('timer'); //获取ID为timer的对象
+            timer.innerHTML = time; //初始化显示秒数
+            time = time - 1;
+            var g = window.setInterval(function(){
+                if(time<0){
+                    window.clearTimeout(g); //清除动画
+                    window.location.href = '@Model.LinkUrl'; //跳转到指定地址
+        } else {
+            showTime();
+        }
+        },1000);
+            //显示函数
+            function showTime(){
+                timer.innerHTML = time;
+                time--;
+            }
+        };
+            </script>
+        }
+    }
+</head>
+<body class="gray-bg">
+    <div class="middle-box text-center animated fadeInDown">
+        <h1>@Model.Status</h1>
+        <h3 style="font-size: 22px;">@Model.Message</h3>
+        <div class="error-desc">
+            <h4> @Html.Raw(Model.Details)</h4>
+            @if (Model.IsAutoLink)
+            {
+                <text>
+                <br />此页面将在@{
+                    if (Model.CountdownModel == 0)
+                    { @Model.CountdownTime}
+                    else
+                    {<span id="timer">@Model.CountdownTime</span>}}秒后跳转
+                </text>
+                    }
+            <br />
+            @if (Model.IsShowLink)
+            {
+                <br /><p><a href="@Model.LinkUrl" class="btn btn-outline btn-info">继续</a></p>
+            }
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+</body>
+</html>

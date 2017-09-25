@@ -1,0 +1,244 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>后台管理</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="~/favicon.ico">
+
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/lib/animate.css/animate.css" rel="stylesheet" />
+    <link href="~/css/admin/style.css" rel="stylesheet" />
+    <link href="~/css/admin/admin.css" rel="stylesheet" />
+
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+    <div id="wrapper">
+        <!--左侧导航开始-->
+        <nav class="navbar-default navbar-static-side" style="margin-top:1px;" role="navigation">
+            <div class="nav-close">
+                <i class="fa fa-times-circle"></i>
+            </div>
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element" style="margin:40px;">
+                            <span><img alt="image" class="img-circle" width="64" height="64" src="~/images/admin/default_avatar.jpg" /></span>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="clear">
+                                    <span class="block m-t-xs"><strong class="font-bold">登录的用户名</strong></span>
+                                    <span class="text-muted text-xs block">用户名<b class="caret"></b></span>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li class="divider" style="display:none;"></li>
+                                <li>
+                                    <a href="/Admin/Home/LoginOut">安全退出</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="logo-element">
+                            <span><img alt="image" class="img-circle" width="64" height="64" src="~/images/admin/default_avatar.jpg" /></span>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="J_menuItem" href="/Admin/Home/Center"><i class="fa fa-home"></i><span class="nav-label">主页</span></a>
+                    </li>
+                    @*@if (CheckAdminPower("sysmerchant/Index", false))
+                    {*@
+                        <li class="line dk"></li>
+                        <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                            <span class="ng-scope">店铺</span>
+                        </li>
+                        <li>
+                            <a class="J_menuItem" href="/Admin/sysmerchant/Index"><i class="fa fa-globe"></i> <span class="nav-label">店铺管理</span></a>
+                        </li>
+                    @*}*@
+                    
+                    <li style="height: 100px;">
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <!--左侧导航结束-->
+        <!--右侧部分开始-->
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-info " href="javascript:void(0)"><i class="fa fa-bars"></i> </a>
+                        <form role="search" style="display:none;" class="navbar-form-custom" method="post" action="search_results.html">
+                            <div class="form-group">
+                                <input type="text" placeholder="请输入您需要查找的内容 …" class="form-control" name="top-search" id="top-search">
+                            </div>
+                        </form>
+                    </div>
+                    <ul class="nav navbar-top-links navbar-right">
+                        <!--
+                        <li class="dropdown" style="display:none;">
+                            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="javascript:void(0);">
+                                <i class="fa fa-envelope"></i> <span class="label label-warning">16</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-messages">
+                                <li class="m-t-xs">
+                                    <div class="dropdown-messages-box">
+                                        <a href="http://www.baidu.com" target="_blank" class="pull-left">
+                                            <img alt="image" class="img-circle" src="img/a7.jpg">
+                                        </a>
+                                        <div class="media-body">
+                                            <small class="pull-right">46小时前</small>
+                                            <strong>小四</strong> 这个在日本投降书上签字的军官，建国后一定是个不小的干部吧？
+                                            <br>
+                                            <small class="text-muted">3天前 2014.11.8</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <div class="dropdown-messages-box">
+                                        <a href="profile.html" class="pull-left">
+                                            <img alt="image" class="img-circle" src="img/a4.jpg">
+                                        </a>
+                                        <div class="media-body ">
+                                            <small class="pull-right text-navy">25小时前</small>
+                                            <strong>国民岳父</strong> 如何看待“男子不满自己爱犬被称为狗，刺伤路人”？——这人比犬还凶
+                                            <br>
+                                            <small class="text-muted">昨天</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <div class="text-center link-block">
+                                        <a class="J_menuItem" href="mailbox.html">
+                                            <i class="fa fa-envelope"></i> <strong> 查看所有消息</strong>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        -->
+                        @*<li class="dropdown" style="margin-right:50px;">
+                                <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                                    <i class="fa fa-bell"></i> <span class="label label-primary" id="sys_msg_total"></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-alerts" id="sys_msg_list">
+                                </ul>
+                            </li>*@
+                    </ul>
+                </nav>
+            </div>
+            <div class="row J_mainContent" id="content-main">
+                <iframe id="J_iframe" width="100%" height="100%" src="/Admin/Home/Center" frameborder="0" data-id="/Admin/Home/Center" seamless></iframe>
+            </div>
+        </div>
+        <!--右侧部分结束-->
+    </div>
+    <!-- 全局js -->
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/lib/layer/layer.min.js"></script>
+    <script src="~/lib/PACE/pace.js"></script>
+
+    <script src="~/lib/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/lib/slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- 自定义js -->
+    <script src="~/js/admin/hAdmin.js"></script>
+    @*<script type="text/javascript" src="~/Assets/js/jquery.signalR-2.2.1.min.js"></script>*@
+    @*<script type="text/javascript" src="~/SignalR/hubs"></script>*@
+    <!-- SignalR -->
+    <script type="text/javascript">
+        //$(function () {
+        //    var proxy = $.connection.sysMessageService;
+
+        //    proxy.client.displayDatas = function () {
+        //        getMsgData();
+        //    };
+        //    $.connection.hub.start();
+        //    getMsgData();
+
+        //    $.connection.hub.start().done(function () {
+        //        getMsgData();
+        //    });
+        //});
+
+        //function getMsgData() {
+        //    var $list = $('#sys_msg_list');
+        //    $.ajax({
+        //        url: '/Admin/Home/SysMessage',
+        //        type: 'POST',
+        //        datatype: 'json',
+        //        success: function (data) {
+        //            $list.empty();
+        //            var lis = [];
+        //            if (data.length > 0) {
+        //                $("#sys_msg_total").text(data.length);
+        //                $.each(data, function (i,item) {
+        //                    var htmlT = '<li>';
+        //                    htmlT += '<a href="javascript:void(0);" link="' + item.LinkUrl + '" open-new-tab="' + item.OpenNewTab + '" onclick="setMsgRead(this)" d-id=' + item.ID + '>';
+        //                    htmlT += '<div>' + item.Content + '<span class="pull-right text-muted small">' + item.TimeBefore + '前</span></div>';
+        //                    htmlT += '</a></li><li class="divider"></li>';
+        //                    lis.push(htmlT);
+        //                })
+        //            }else
+        //            {
+        //                $("#sys_msg_total").text('');
+        //                lis.push('<li style="text-align:center;">没有消息</li><li class="divider"></li>');
+        //            }
+        //            lis.push('<li><div class="text-center link-block"><a class="J_menuItem" href="javascript:(0);" onclick="to_msg_list()"><strong>查看所有 </strong><i class="fa fa-angle-right"></i></a></div></li>')
+        //            $list.append(lis.join(''));
+        //        }
+        //    });
+        //}
+    </script>
+    <script type="text/javascript">
+		$(function(){
+		    //菜单点击
+		    $(".J_menuItem").on('click',function(){
+		        var url = $(this).attr('href');
+		        $("#J_iframe").attr('src',url);
+		        return false;
+		    });
+		});
+
+		//function to_msg_list()
+		//{
+		//    document.getElementById("J_iframe").src = "/Admin/SysMessage/Index";
+		//}
+
+		//function setMsgRead(obj)
+		//{
+		//    var link =$(obj).attr("link");
+		//    var id =$(obj).attr("d-id");
+		//    $.ajax({
+		//        url: '/Admin/SysMessage/SetMsgRead',
+		//        type: 'POST',
+		//        data:{"id":id},
+		//        datatype: 'json',
+		//        success: function (data) {
+		//            if(data.msg == 0)
+		//            {
+		//                layer.msg(data.msgbox);
+		//            }
+		//        }
+		//    });
+
+		//    if($(obj).attr("open-new-tab"))
+		//    {
+		//        window.open(link)
+		//    }else
+		//    {
+		//        document.getElementById("J_iframe").src = link;
+		//    }
+		//}
+
+    </script>
+</body>
+</html>

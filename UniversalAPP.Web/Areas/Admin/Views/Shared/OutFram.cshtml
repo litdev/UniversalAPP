@@ -1,0 +1,22 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#a_out").click();
+            document.getElementById("a_out").click();
+        })
+    </script>
+</head>
+<body>
+    <div>
+        <a href="@Url.Action("LoginOut", "Home",new { Area="Admin"})" target="_parent" id="a_out" style="display:none">跳出框架</a>
+    </div>
+</body>
+</html>

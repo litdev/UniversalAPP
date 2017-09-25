@@ -1,0 +1,23 @@
+﻿@{ 
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>错误页面</title>
+</head>
+<body>
+    <h1>发生错误</h1>
+    <h3>
+        @{ 
+            var ex = (System.Exception)ViewData["Exception"];
+            <span>
+                @if(ex != null)
+                {
+                    @:ex.Message
+                }
+            </span>
+        }
+    </h3>
+</body>
+</html>

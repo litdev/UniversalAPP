@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+
+        <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+        <link href="~/lib/animate.css/animate.css" rel="stylesheet" />
+        <link href="~/css/admin/style.css" rel="stylesheet" />
+        <link href="~/css/admin/admin.css" rel="stylesheet" />
+    </environment>
+    <environment exclude="Development">
+        @*<link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+            asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+            asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />*@
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+
+        <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+        <link href="~/lib/animate.css/animate.css" rel="stylesheet" />
+        <link href="~/css/admin/style.css" rel="stylesheet" />
+        <link href="~/css/admin/admin.css" rel="stylesheet" />
+
+    </environment>
+
+    @RenderSection("head", required: false)
+
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins bordertop">
+                    @RenderSection("nav")
+                    <!-- 内容开始 -->
+                    <div class="ibox-content">
+                        @RenderBody()
+                    </div>
+                    <!-- 内容结束 -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/lib/layer/layer.min.js"></script>
+    <script src="~/lib/PACE/pace.js"></script>
+    <!-- 第三方插件 -->
+    <script src="~/js/admin/tools.js"></script>
+
+    @RenderSection("foot", required: false)
+</body>
+</html>
+
