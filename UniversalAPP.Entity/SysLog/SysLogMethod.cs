@@ -25,6 +25,11 @@ namespace UniversalAPP.Entity
     /// </summary>
     public class SysLogMethod
     {
+        public SysLogMethod()
+        {
+            this.AddTime = DateTime.Now;
+        }
+
         public int ID { get; set; }
 
         /// <summary>

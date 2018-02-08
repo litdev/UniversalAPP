@@ -10,6 +10,11 @@ namespace UniversalAPP.Entity
     /// </summary>
     public class SysRole
     {
+        public SysRole()
+        {
+            this.AddTime = DateTime.Now;
+        }
+
         /// <summary>
         /// 自增ID
         /// </summary>

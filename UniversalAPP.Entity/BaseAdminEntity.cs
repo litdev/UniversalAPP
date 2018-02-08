@@ -9,6 +9,12 @@ namespace UniversalAPP.Entity
     /// </summary>
     public class BaseAdminEntity
     {
+        public BaseAdminEntity()
+        {
+            this.AddTime = DateTime.Now;
+            this.LastUpdateTime = DateTime.Now;
+        }
+
         /// <summary>
         /// 添加时间
         /// </summary>
@@ -18,7 +24,7 @@ namespace UniversalAPP.Entity
         /// <summary>
         /// 添加者ID
         /// </summary>
-        public int AddUserID { get; set; }
+        public int? AddUserID { get; set; }
 
         /// <summary>
         /// 添加信息的用户信息
@@ -36,7 +42,7 @@ namespace UniversalAPP.Entity
         /// <summary>
         /// 最后修改者ID
         /// </summary>
-        public int LastUpdateUserID { get; set; }
+        public int? LastUpdateUserID { get; set; }
 
         /// <summary>
         /// 最后修改的用户的信息

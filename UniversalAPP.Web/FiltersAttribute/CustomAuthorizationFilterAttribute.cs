@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using System.Linq;
 using UniversalAPP.Tools;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace UniversalAPP.Web
 {
@@ -18,7 +19,7 @@ namespace UniversalAPP.Web
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly Models.SiteConfig _config;
 
-        public CustomAuthorizationFilterAttribute(IHostingEnvironment hostingEnvironment, ILoggerFactory loggerFactory,IOptionsSnapshot<Models.SiteConfig> siteConfig)
+        public CustomAuthorizationFilterAttribute(IHostingEnvironment hostingEnvironment, ILoggerFactory loggerFactory, IOptionsSnapshot<Models.SiteConfig> siteConfig)
         {
             _hostingEnvironment = hostingEnvironment;
             _logger = loggerFactory.CreateLogger<CustomAuthorizationFilterAttribute>();
@@ -38,7 +39,17 @@ namespace UniversalAPP.Web
             }
             else if (context.HttpContext.Request.Path.StartsWithSegments("/admin", StringComparison.OrdinalIgnoreCase))
             {
+                //添加了AllowAnonymous属性则要跳过验证
+                if (context.Filters.Any(p => p is IAllowAnonymousFilter)) return;
+                //判断用户是否登录
+
+
                 //后台管理的身份验证
+                string controller = context.RouteData.Values["controller"].ToString().ToLower();
+                string action = context.RouteData.Values["action"].ToString().ToLower();
+                string route = controller + "/" + action;
+
+
 
             }
             else
@@ -105,7 +116,7 @@ namespace UniversalAPP.Web
                 double diff = WebHelper.DateTimeDiff(dt_old, dt_now, "am");
                 if (diff >= _config.WebAPITmeOutMinute)
                 {
-                    
+
                     ResultAPIAuthMsg(context, "TIME OUT");
                     return;
                 }

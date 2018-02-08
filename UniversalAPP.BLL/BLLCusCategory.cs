@@ -1,0 +1,118 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.DynamicLinq;
+using System.Linq.Dynamic.Core;
+using System.Data.SqlClient;
+
+namespace UniversalAPP.BLL
+{
+    /// <summary>
+    /// 无限级分类演示
+    /// </summary>
+    public class BLLCusCategory:BaseBLL
+    {
+        public BLLCusCategory(EFCore.EFDBContext context) { this.db = context; }
+
+        /// <summary>
+        /// 添加分类数据
+        /// </summary>
+        /// <returns></returns>
+        public Task<int> Add(Entity.CusCategory entity)
+        {
+            if (entity == null)
+                return Task.Factory.StartNew(()=> { return -1; });
+            
+            Entity.CusCategory p_entity = null;
+            if (entity.PID != null)
+            {
+                p_entity = db.CusCategorys.Find(entity.PID);
+                if (p_entity == null)
+                {
+                    entity.PID = null;
+                    entity.Depth = 1;
+                }
+                else
+                {
+                    entity.Depth = p_entity.Depth + 1;
+                }
+            }
+
+            db.CusCategorys.Add(entity);
+            return db.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 修改分类数据
+        /// </summary>
+        /// <returns></returns>
+        public Task<int> Modify(Entity.CusCategory entity)
+        {
+            if (entity == null)
+                return Task.Factory.StartNew(()=> { return -1; });
+
+            Entity.CusCategory p_entity = null;
+            if (entity.PID != null)
+            {
+                p_entity = db.CusCategorys.Find(entity.PID);
+                if (p_entity == null)
+                {
+                    entity.PID = null;
+                    entity.Depth = 1;
+                }
+                else
+                {
+                    entity.Depth = p_entity.Depth + 1;
+                }
+            }
+
+            db.Entry(entity).State = EntityState.Modified;
+            return db.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 根据ID获取子或父数据
+        /// </summary>
+        /// <param name="up">查找父级，否则为查找子级</param>
+        /// <param name="id">当前分类ID</param>
+        /// <returns></returns>
+        public Task<List<Entity.CusCategory>> GetList(bool up, int id)
+        {
+            SqlParameter[] param = { new SqlParameter("@Id", id) };
+            string proc_name = "dbo.sp_GetParentCusCategory @Id";
+            if (!up)
+                proc_name = "dbo.sp_GetChildCusCategory @Id";
+            return db.CusCategorys.FromSql(proc_name, param).ToListAsync();
+        }
+
+        /// <summary>
+        /// 获取某个分类下所有的子类ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string GetChildIDStr(int id)
+        {
+            string Sql = $"select dbo.fn_GetChildCusCategoryStr({id}) as idstr";
+            string result = string.Empty;
+            using (var connection = db.Database.GetDbConnection())
+            {
+                connection.Open();
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = Sql;
+                    using (SqlDataReader reader = command.ExecuteReader() as SqlDataReader)
+                    {
+                        while (reader.Read()) result = reader["idstr"].ToString();
+                    }
+                }
+            }
+            return result;
+        }
+
+
+    }
+    
+}

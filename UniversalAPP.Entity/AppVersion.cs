@@ -32,6 +32,12 @@ namespace UniversalAPP.Entity
 
     public class AppVersion
     {
+        public AppVersion()
+        {
+            this.AddTime = DateTime.Now;
+        }
+
+
         public int ID { get; set; }
 
         [Display(Name = "所属平台")]

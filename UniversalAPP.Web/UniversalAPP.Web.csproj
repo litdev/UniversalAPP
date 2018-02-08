@@ -6,9 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
     <PackageReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,7 +17,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\lib\layer\mobile\layer.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Universal.Tools\UniversalAPP.Tools.csproj" />
+    <ProjectReference Include="..\UniversalAPP.BLL\UniversalAPP.BLL.csproj" />
+    <ProjectReference Include="..\UniversalAPP.EFCore\UniversalAPP.EFCore.csproj" />
+    <ProjectReference Include="..\UniversalAPP.Entity\UniversalAPP.Entity.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1Development_1json__JSONSchema="" /></VisualStudio></ProjectExtensions>

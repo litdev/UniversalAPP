@@ -1,0 +1,8 @@
+﻿1.Any查询
+	db.AppVersons.AsQueryable().AnyAsync("ID=@0", id)
+2.Count查询
+	db.AppVersons.AsQueryable().CountAsync("AppType=@0", 1);
+3.
+
+经典组合
+    db.AppVersons.Where("VersionCode > 0 And AppType = 1 And DynamicFunctions.Like(Content,\"%匹配的字符串%\") ").ToListAsync();

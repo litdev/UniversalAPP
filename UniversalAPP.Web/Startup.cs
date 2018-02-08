@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,9 +20,35 @@ namespace UniversalAPP.Web
 
         public IConfiguration Configuration { get; }
 
+        
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<EFCore.EFDBContext>(options => 
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), p => p.UseRowNumberForPaging()));
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+            {
+                option.LoginPath = "/Admin/Home/Login";
+                option.LogoutPath = "/Admin/Home/LoginOut";
+            });
+            #region 添加自定义验证Scheme
+
+            //再添加一个验证Scheme
+            //.AddCookie(CustomerAuthorizeAttribute.CustomerAuthenticationScheme, option =>
+            // {
+            //     option.LoginPath = new PathString("/Account/Signin");
+            //     option.AccessDeniedPath = new PathString("/Error/Forbidden");
+            // });
+            //验证登录状态：控制器或Action加上属性[CustomerAuthorize]
+            //获取自定义的HttpContext.User
+            //var auth = await HttpContext.AuthenticateAsync(CustomerAuthorizeAttribute.CustomerAuthenticationScheme);
+            //if (auth.Succeeded) var user_identity = auth.Principal.Identity;
+            //退出登录：await AuthenticationHttpContextExtensions.SignOutAsync(HttpContext, CustomerAuthorizeAttribute.CustomerAuthenticationScheme);
+
+            #endregion
+
             //注入配置文件
             services.Configure<Models.SiteConfig>(Configuration.GetSection("SiteConfig"));
 
@@ -32,6 +60,7 @@ namespace UniversalAPP.Web
                 //options.Filters.Add(typeof(SimpleActionFilterAttribute));
                 //options.Filters.Add(typeof(SimpleResultFilterAttribute));
             });
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,7 +81,9 @@ namespace UniversalAPP.Web
                 
                 //app.UseExceptionHandler("/Home/Error");
             }
-
+            //验证
+            app.UseAuthentication();
+            
             app.UseSession();
             app.UseStaticFiles();
             app.UseMvc(routes =>

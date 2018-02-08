@@ -8,6 +8,11 @@ namespace UniversalAPP.Entity
     /// </summary>
     public class SysLogException
     {
+        public SysLogException()
+        {
+            this.AddTime = DateTime.Now;
+        }
+
         public int ID { get; set; }
 
 

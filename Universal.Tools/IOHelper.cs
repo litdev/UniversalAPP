@@ -18,6 +18,7 @@ namespace UniversalAPP.Tools
         /// <returns></returns>
         public static Hashtable GetImageWidthHeight(string file_path)
         {
+
             Hashtable hash = new Hashtable();
             //System.Drawing.Image temp_image = System.Drawing.Image.FromFile(file_path);
             

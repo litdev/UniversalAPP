@@ -21,6 +21,8 @@ namespace UniversalAPP.Entity
         public SysUser()
         {
             this.Gender = UserGender.男;
+            this.RegTime = DateTime.Now;
+            this.LastLoginTime = DateTime.Now;
         }
 
         /// <summary>
@@ -76,7 +78,7 @@ namespace UniversalAPP.Entity
             get
             {
                 if (string.IsNullOrWhiteSpace(this.Avatar))
-                    return "~/images/admin/default_avatar.jpg";
+                    return "/images/admin/default_avatar.jpg";
                 else
                     return this.Avatar;
             }

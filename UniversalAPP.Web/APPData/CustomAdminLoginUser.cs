@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 
 namespace UniversalAPP.Web
@@ -20,15 +21,15 @@ namespace UniversalAPP.Web
             
         }
 
-        /// <summary>
-        /// 用户登出
-        /// </summary>
-        /// <param name="context"></param>
-        public static void LoginOut(HttpContext context)
-        {
-
-        }
-
+        ///// <summary>
+        ///// 用户登出
+        ///// </summary>
+        ///// <param name="context"></param>
+        //public Task LoginOut(HttpContext context)
+        //{            
+        //    return Microsoft.AspNetCore.Authentication.AuthenticationHttpContextExtensions.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        //}
+               
 
 
     }

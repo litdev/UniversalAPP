@@ -8,6 +8,11 @@ namespace UniversalAPP.Entity
     /// </summary>
     public class SysRoute
     {
+        public SysRoute()
+        {
+            this.AddTime = DateTime.Now;
+        }
+
         public int ID { get; set; }
 
         /// <summary>

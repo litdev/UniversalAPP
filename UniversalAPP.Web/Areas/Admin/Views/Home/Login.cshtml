@@ -1,0 +1,89 @@
+﻿@model UniversalAPP.Web.Areas.Admin.Models.ViewModelLogin
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台管理 - 登录</title>
+
+
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/lib/animate.css/animate.min.css" rel="stylesheet" />
+    <link href="~/css/admin/style.css" rel="stylesheet" />
+    <link href="~/css/admin/admin.css" rel="stylesheet" />
+
+    <link href="~/lib/iCheck/css/custom.css" rel="stylesheet" />
+</head>
+
+
+<body class="gray-bg">
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div>
+            <div>
+                <h1 class="logo-name">H+</h1>
+
+            </div>
+            <h3>欢迎登录后台系统 </h3>
+            <form method="post" role="form" class="m-t" onsubmit="toValid()" style="margin-top:25px;">
+                @Html.AntiForgeryToken()
+                <div class="form-group" style="margin-bottom:25px;">
+                    @Html.TextBoxFor(s => s.user_name, new { placeholder = "用户名", @class = "form-control" })
+                    <div class="pull-left vali-msg">@Html.ValidationMessageFor(p => p.user_name)</div>
+                </div>
+                <div class="form-group" style="margin-bottom:25px;">
+                    @Html.PasswordFor(s => s.password, new { placeholder = "密码", @class = "form-control" })
+                    <div class="pull-left vali-msg">@Html.ValidationMessageFor(p => p.password)</div>
+                </div>
+                <div class="pull-left" style="margin-bottom: 10px;">
+                    <div class="i-checks">
+                        <label style="font-weight:inherit;">
+                            @Html.CheckBoxFor(s => s.is_rember) 保持登录
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" id="confi" class="btn btn-info block full-width m-b">登 录</button>
+            </form>
+
+        </div>
+        <hr>
+        <div class="signup-footer">
+            <div class="pull-center">
+                @{
+                    Html.RenderPartial("_FootInc");
+                }
+            </div>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/messages_zh.min.js"></script>
+
+    <script src="~/lib/iCheck/icheck.min.js"></script>
+    <script>
+        $(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        })
+
+        function toValid() {
+            if ($("form").valid()) {
+                $("#confi").val("登录中...");
+                $("#confi").attr({ "disabled": "disabled" });
+            }
+
+        }
+    </script>
+</body>
+</html>
