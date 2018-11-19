@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +29,7 @@ namespace UniversalAPP.Web.Controllers
 
         public IActionResult Index()
         {
+            //System.Diagnostics.Trace.WriteLine($"是否是开发环境下:{_env.IsDevelopment()}");
             return View();
         }
         public static IConfigurationRoot Configuration { get; set; }

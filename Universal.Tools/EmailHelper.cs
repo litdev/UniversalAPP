@@ -7,14 +7,24 @@ namespace UniversalAPP.Tools
 {
     public class EmailHelper
     {
-        public bool Send(string title, string to_user,string content)
+        private string _host = string.Empty;
+        private int _port = 0;
+        private bool _enableSsl = false;
+        private string _mailFrom = string.Empty;
+        private string _mailPwd = string.Empty;
+
+        public EmailHelper()
         {
-            EmailToolHelper emailToolHelper = new EmailToolHelper();
-            emailToolHelper.enableSsl = TypeHelper.ObjectToBool(AppConfigurtaionServices.Configuration["SiteConfig:EmailEnableSsl"]);
-            emailToolHelper.mailFrom = AppConfigurtaionServices.Configuration["SiteConfig:EmailFrom"];
-            emailToolHelper.mailPwd = AppConfigurtaionServices.Configuration["SiteConfig:EmailPwd"];
-            emailToolHelper.port = TypeHelper.ObjectToInt(AppConfigurtaionServices.Configuration["SiteConfig:EmailPort"]);
-            emailToolHelper.host = AppConfigurtaionServices.Configuration["SiteConfig:EmailHost"];
+            _host = AppConfigurtaionServices.Configuration["Email:EmailHost"];
+            _port = TypeHelper.ObjectToInt(AppConfigurtaionServices.Configuration["Email:EmailPort"]);
+            _enableSsl = TypeHelper.ObjectToBool(AppConfigurtaionServices.Configuration["Email:EnableSsl"]);
+            _mailFrom = AppConfigurtaionServices.Configuration["Email:From"];
+            _mailPwd = AppConfigurtaionServices.Configuration["Email:Pwd"];
+        }
+
+        public bool Send(string title, string to_user, string content)
+        {
+            EmailToolHelper emailToolHelper = new EmailToolHelper(_host, _port, _enableSsl, _mailFrom, _mailPwd);
             emailToolHelper.isbodyHtml = true;
             emailToolHelper.mailSubject = title;
             emailToolHelper.mailToArray = to_user.Split(',');
@@ -32,23 +42,18 @@ namespace UniversalAPP.Tools
         /// <param name="to_user"></param>
         /// <param name="col"></param>
         /// <returns></returns>
-        public bool Send(string _ContentRootPath,string templateServerPath, string title, string to_user, NameValueCollection col)
+        public bool Send(string _ContentRootPath, string templateServerPath, string title, string to_user, NameValueCollection col)
         {
             FileHelper fileHelper = new FileHelper(_ContentRootPath);
             string templatePath = fileHelper.MapPath(templateServerPath);
-            if(!fileHelper.IsExist(templatePath, false))
+            if (!fileHelper.IsExist(templatePath, false))
             {
                 throw new Exception("邮件模板不存在");
             }
 
             string email_content = EmailTemplateHelper.BulidByFile(templatePath, col);
 
-            EmailToolHelper emailToolHelper = new EmailToolHelper();
-            emailToolHelper.enableSsl = TypeHelper.ObjectToBool(AppConfigurtaionServices.Configuration["SiteConfig:EmailEnableSsl"]) ;
-            emailToolHelper.mailFrom = AppConfigurtaionServices.Configuration["SiteConfig:EmailFrom"];
-            emailToolHelper.mailPwd = AppConfigurtaionServices.Configuration["SiteConfig:EmailPwd"];
-            emailToolHelper.port = TypeHelper.ObjectToInt(AppConfigurtaionServices.Configuration["SiteConfig:EmailPort"]);
-            emailToolHelper.host = AppConfigurtaionServices.Configuration["SiteConfig:EmailHost"];
+            EmailToolHelper emailToolHelper = new EmailToolHelper(_host, _port, _enableSsl, _mailFrom, _mailPwd);
             emailToolHelper.isbodyHtml = true;
             emailToolHelper.mailSubject = title;
             emailToolHelper.mailToArray = to_user.Split(',');

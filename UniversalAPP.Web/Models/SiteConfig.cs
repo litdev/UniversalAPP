@@ -61,34 +61,5 @@ namespace UniversalAPP.Web.Models
 
         #endregion
 
-        #region 邮件配置
-
-        /// <summary>
-        /// SMTP邮件服务器
-        /// </summary>
-        public string EmailHost { get; set; }
-
-        /// <summary>
-        /// SMTP端口
-        /// </summary>
-        public int EmailPort { get; set; }
-
-        /// <summary>
-        /// 是否启用SSL
-        /// </summary>
-        public bool EmailEnableSsl { get; set; }
-
-        /// <summary>
-        /// 发送账户
-        /// </summary>
-        public string EmailFrom { get; set; }
-
-        /// <summary>
-        /// 账户密码
-        /// </summary>
-        public string EmailPwd { get; set; }
-
-        #endregion
-
     }
 }

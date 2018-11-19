@@ -63,6 +63,17 @@ namespace UniversalAPP.Tools
         /// 附件
         /// </summary>
         public string[] attachmentsPath { get; set; }
+        
+        public EmailToolHelper() { }
+
+        public EmailToolHelper(string _host, int _port, bool _enableSsl, string _mailFrom, string _mailPwd)
+        {
+            this.host = _host;
+            this.port = _port;
+            this.enableSsl = _enableSsl;
+            this.mailFrom = _mailFrom;
+            this.mailPwd = _mailPwd;
+        }
 
         public bool Send()
         {
