@@ -83,7 +83,9 @@ namespace UniversalAPP.Web
             }
             //验证
             app.UseAuthentication();
-            
+            //图片不存在时返回默认图片
+            app.UseDefaultImage(defaultImagePath: Configuration.GetSection("defaultImagePath").Value);
+
             app.UseSession();
             app.UseStaticFiles();
             app.UseMvc(routes =>
