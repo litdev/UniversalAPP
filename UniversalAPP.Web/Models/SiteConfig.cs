@@ -5,7 +5,10 @@ using System.Threading.Tasks;
 
 namespace UniversalAPP.Web.Models
 {
-    public class SiteConfig
+    /// <summary>
+    /// 站点基础配置文件
+    /// </summary>
+    public class SiteBasicConfig
     {
         #region 站点综合设置
 

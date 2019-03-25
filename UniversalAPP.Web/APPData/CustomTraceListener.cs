@@ -13,11 +13,17 @@ namespace UniversalAPP.Web
     {
         public override void Write(string message)
         {
-            throw new NotImplementedException();
+            TxtToFile(message);
         }
 
         public override void WriteLine(string message)
         {
+            TxtToFile(message);
+        }
+
+        void TxtToFile(string message)
+        {
+            if (string.IsNullOrWhiteSpace(message)) return;
             string file_name = "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
             string server_path = "\\logs\\";
             string wl_path = System.Threading.Thread.GetDomain().BaseDirectory + server_path;
@@ -30,5 +36,6 @@ namespace UniversalAPP.Web
             sw.WriteLine("/*************************" + dt.ToString() + " end **************************/");
             sw.Close();
         }
+
     }
 }

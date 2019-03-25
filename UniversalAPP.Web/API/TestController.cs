@@ -12,18 +12,14 @@ namespace UniversalAPP.Web.API
 {
     [Produces("application/json")]
     [Route("api/Test")]
-    public class TestController : Controller
+    public class TestController : BaseAPIController
     {
         [HttpGet]
         [Route("doing")]
         public UnifiedResultEntity<string> doing()
         {
             //throw new Exception("sss");
-            UnifiedResultEntity<string> result = new UnifiedResultEntity<string>();
-            result.msg = 1;
-            result.msgbox = "ok";
-            result.data = "接口已通";
-            return result;
+            return ResultBasicString(1, "OK", "接口已通");
         }
     }
 }

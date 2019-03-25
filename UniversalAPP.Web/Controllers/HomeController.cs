@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using UniversalAPP.Web.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Configuration;
 using System.Collections.Specialized;
+using UniversalAPP.Web.Models;
 using Microsoft.AspNetCore.Hosting;
 
 namespace UniversalAPP.Web.Controllers
@@ -15,11 +15,11 @@ namespace UniversalAPP.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private Models.SiteConfig _config;
+        private Models.SiteBasicConfig _config;
         private readonly EFCore.EFDBContext _context;
         private readonly IHostingEnvironment _env;
 
-        public HomeController(IHostingEnvironment environment,ILoggerFactory loggerFactory, IOptionsSnapshot<SiteConfig> appkeys,EFCore.EFDBContext context)
+        public HomeController(IHostingEnvironment environment, ILoggerFactory loggerFactory, IOptionsSnapshot<SiteBasicConfig> appkeys, EFCore.EFDBContext context)
         {
             _env = environment;
             _logger = loggerFactory.CreateLogger<HomeController>();
@@ -33,7 +33,7 @@ namespace UniversalAPP.Web.Controllers
             return View();
         }
         public static IConfigurationRoot Configuration { get; set; }
-        
+
         public IActionResult SendEmailTest()
         {
             Tools.EmailHelper emailHelper = new Tools.EmailHelper();
@@ -58,6 +58,7 @@ namespace UniversalAPP.Web.Controllers
 
             return View();
         }
+
 
         public IActionResult Error()
         {

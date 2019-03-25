@@ -29,6 +29,7 @@ namespace UniversalAPP.Web
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     logger.LogError(ex, "数据库初始化失败");
+                    System.Diagnostics.Trace.Write("数据库初始化失败");
                 }
             }
 

@@ -17,9 +17,9 @@ namespace UniversalAPP.Web
     {
         private readonly ILogger<CustomAuthorizationFilterAttribute> _logger;
         private readonly IHostingEnvironment _hostingEnvironment;
-        private readonly Models.SiteConfig _config;
+        private readonly Models.SiteBasicConfig _config;
 
-        public CustomAuthorizationFilterAttribute(IHostingEnvironment hostingEnvironment, ILoggerFactory loggerFactory, IOptionsSnapshot<Models.SiteConfig> siteConfig)
+        public CustomAuthorizationFilterAttribute(IHostingEnvironment hostingEnvironment, ILoggerFactory loggerFactory, IOptionsSnapshot<Models.SiteBasicConfig> siteConfig)
         {
             _hostingEnvironment = hostingEnvironment;
             _logger = loggerFactory.CreateLogger<CustomAuthorizationFilterAttribute>();

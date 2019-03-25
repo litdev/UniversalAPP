@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +26,16 @@ namespace UniversalAPP.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
+
+            //Cookie GDPR政策
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => false; //设置为False为禁用这个规范，问题：https://blog.csdn.net/shiershilian/article/details/80876803
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
             services.AddDbContext<EFCore.EFDBContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), p => p.UseRowNumberForPaging()));
 
@@ -34,7 +45,6 @@ namespace UniversalAPP.Web
                 option.LogoutPath = "/Admin/Home/LoginOut";
             });
             #region 添加自定义验证Scheme
-
             //再添加一个验证Scheme
             //.AddCookie(CustomerAuthorizeAttribute.CustomerAuthenticationScheme, option =>
             // {
@@ -50,26 +60,28 @@ namespace UniversalAPP.Web
             #endregion
 
             //注入配置文件
-            services.Configure<Models.SiteConfig>(Configuration.GetSection("SiteConfig"));
+            services.Configure<Models.SiteBasicConfig>(Configuration.GetSection("SiteBasicConfig"));
 
             //添加MVC及过滤器
-            services.AddMvc(options=> {
+            services.AddMvc(options =>
+            {
                 options.Filters.Add(typeof(CustomExceptionFilterAttribute));
-                options.Filters.Add(typeof(CustomAuthorizationFilterAttribute));
+                //options.Filters.Add(typeof(CustomAuthorizationFilterAttribute));
                 //options.Filters.Add(typeof(SimpleResourceFilterAttribute));
                 //options.Filters.Add(typeof(SimpleActionFilterAttribute));
                 //options.Filters.Add(typeof(SimpleResultFilterAttribute));
-            });
+            }).SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
             services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            ServiceLocator.Instance = app.ApplicationServices;
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
             }
             else
             {
@@ -78,17 +90,22 @@ namespace UniversalAPP.Web
                 //    {
                 //        builder.UseAPIAuthMiddleware();
                 //    });
-                
+
                 //app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
             }
+
+            app.UseHttpsRedirection();
+
             //验证
             app.UseAuthentication();
             //图片不存在时返回默认图片
             app.UseDefaultImage(defaultImagePath: Configuration.GetSection("defaultImagePath").Value);
-
+            
             System.Diagnostics.Trace.Listeners.Clear();
             System.Diagnostics.Trace.Listeners.Add(new CustomTraceListener());
-
+            
+            //app.UseCookiePolicy();//增加对于GDPR政策的支持
             app.UseSession();
             app.UseStaticFiles();
             app.UseMvc(routes =>

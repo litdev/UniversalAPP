@@ -22,6 +22,37 @@ namespace UniversalAPP.Tools
         private static int[] constantInt = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         /// <summary>
+        /// 价格处理，如果小数点都是0，则返回整形，否则返回小数点后两位
+        /// </summary>
+        /// <param name="money"></param>
+        /// <returns></returns>
+        public static string FormatDecimalMoney(decimal money)
+        {
+            if ((money - (int)money) == 0) return ((int)money).ToString();
+            else return money.ToString("F2");
+        }
+
+        public static string ConvertMilliseconds(double milliseconds)
+        {
+            if (milliseconds <= 0)
+                return "刚刚";
+            //秒
+            double miao = milliseconds / 1000;
+            if (miao < 60)
+                return (int)miao + "秒";
+
+            double fenzhong = miao / 60;
+            if (fenzhong < 60)
+                return (int)fenzhong + "分钟";
+            double xiaoshi = fenzhong / 60;
+            if (xiaoshi < 60)
+                return xiaoshi.ToString("0.0") + "小时";
+
+            double tian = xiaoshi / 24;
+            return (int)tian + "天";
+        }
+
+        /// <summary>
         /// 把时间改为几个月,几天前,几小时前,几分钟前,或几秒前
         /// </summary>
         /// <param name="dt"></param>

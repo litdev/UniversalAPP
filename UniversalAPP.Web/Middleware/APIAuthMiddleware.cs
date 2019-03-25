@@ -18,9 +18,9 @@ namespace UniversalAPP.Web
     {
         private RequestDelegate _next;
         private ILogger _logger;
-        private Models.SiteConfig _config;
+        private Models.SiteBasicConfig _config;
 
-        public APIAuthMiddleware(RequestDelegate requestDelegate, ILoggerFactory factory, IOptionsSnapshot<Models.SiteConfig> appkeys)
+        public APIAuthMiddleware(RequestDelegate requestDelegate, ILoggerFactory factory, IOptionsSnapshot<Models.SiteBasicConfig> appkeys)
         {
             _next = requestDelegate;
             _logger = factory.CreateLogger("Middleware");

@@ -14,27 +14,23 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace UniversalAPP.Web.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    public class HomeController : Controller
+    [Area("Admin"),Authorize]
+    public class HomeController : BaseAdminController
     {
         private readonly ILogger<HomeController> _logger;
-        private Web.Models.SiteConfig _config;
-        private readonly EFCore.EFDBContext _db_context;
-        private readonly IHostingEnvironment _env;
+        private Web.Models.SiteBasicConfig _config_basic;
 
-        public HomeController(IHostingEnvironment environment,ILoggerFactory loggerFactory, IOptionsSnapshot<Web.Models.SiteConfig> appkeys, EFCore.EFDBContext context)
+        public HomeController(ILoggerFactory loggerFactory, IOptionsSnapshot<Web.Models.SiteBasicConfig> appkeys)
         {
-            _env = environment;
             _logger = loggerFactory.CreateLogger<HomeController>();
-            _config = appkeys.Value;
-            _db_context = context;
+            _config_basic = appkeys.Value;
         }
 
         /// <summary>
         /// 登录
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet,AllowAnonymous]
         public IActionResult Login()
         {
             if (HttpContext.User.Identity.IsAuthenticated) return RedirectToAction("Index");
@@ -44,9 +40,9 @@ namespace UniversalAPP.Web.Areas.Admin.Controllers
         /// <summary>
         /// 登录处理
         /// </summary>
-        /// <param name="s"></param>
+        /// <param name="viewModel"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost, AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(Models.ViewModelLogin viewModel)
         {
@@ -92,14 +88,12 @@ namespace UniversalAPP.Web.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize]
         [AdminPermission("其他", "后台管理首页")]
         public IActionResult Index()
         {
             return View();
         }
 
-        [Authorize]
         public IActionResult Center()
         {
             return View();
@@ -109,7 +103,6 @@ namespace UniversalAPP.Web.Areas.Admin.Controllers
         /// 登出
         /// </summary>
         /// <returns></returns>
-        [Authorize]
         public async Task<IActionResult> LoginOut()
         {
             await AuthenticationHttpContextExtensions.SignOutAsync(HttpContext);
