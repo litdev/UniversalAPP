@@ -13,7 +13,7 @@ namespace UniversalAPP.BLL
     /// <summary>
     /// 用户组操作
     /// </summary>
-    public class BLLSysRole:BaseBLL
+    public class BLLSysRole : BaseBLL
     {
         public BLLSysRole(EFCore.EFDBContext context)
         {
@@ -26,7 +26,7 @@ namespace UniversalAPP.BLL
         /// <param name=""></param>
         /// <param name="qx">权限数据</param>
         /// <returns></returns>
-        public Task<int> Add(Entity.SysRole entity,string qx)
+        public Task<int> Add(Entity.SysRole entity, string qx)
         {
             db.SysRoles.Add(entity);
             if (!string.IsNullOrWhiteSpace(qx))
@@ -63,26 +63,29 @@ namespace UniversalAPP.BLL
             {
                 db.SysRoleRoutes.Where(p => p.SysRoleID == entity.ID).ToList().ForEach(p => db.SysRoleRoutes.Remove(p));
             }
-            List<int> new_id_list = qx.Split(',').Select(Int32.Parse).ToList();
-            var route_list = db.SysRoleRoutes.Where(p => p.SysRoleID == entity.ID).ToList();
-            List<int> route_id_list = new List<int>();
-            foreach (var item in route_list)
-                route_id_list.Add(item.SysRouteID);
-            //判断存在的差
-            var route_del_list = route_id_list.Except(new_id_list).ToList();
-            foreach (var item in route_del_list)
+            else
             {
-                //删除
-                var del_entity = db.SysRoleRoutes.Where(p => p.SysRouteID == item && p.SysRoleID == entity.ID).FirstOrDefault();
-                db.SysRoleRoutes.Remove(del_entity);
+                List<int> new_id_list = qx.Split(',').Select(Int32.Parse).ToList();
+                var route_list = db.SysRoleRoutes.Where(p => p.SysRoleID == entity.ID).ToList();
+                List<int> route_id_list = new List<int>();
+                foreach (var item in route_list)
+                    route_id_list.Add(item.SysRouteID);
+                //判断存在的差
+                var route_del_list = route_id_list.Except(new_id_list).ToList();
+                foreach (var item in route_del_list)
+                {
+                    //删除
+                    var del_entity = db.SysRoleRoutes.Where(p => p.SysRouteID == item && p.SysRoleID == entity.ID).FirstOrDefault();
+                    db.SysRoleRoutes.Remove(del_entity);
 
-            }
+                }
 
-            var route_add_list = new_id_list.Except(route_id_list).ToList();
-            foreach (var item in route_add_list)
-            {
-                //做增加
-                db.SysRoleRoutes.Add(new Entity.SysRoleRoute() { SysRoleID = entity.ID, SysRouteID = item });
+                var route_add_list = new_id_list.Except(route_id_list).ToList();
+                foreach (var item in route_add_list)
+                {
+                    //做增加
+                    db.SysRoleRoutes.Add(new Entity.SysRoleRoute() { SysRoleID = entity.ID, SysRouteID = item });
+                }
             }
 
             try

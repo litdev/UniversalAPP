@@ -1,0 +1,196 @@
+﻿@model UniversalAPP.Entity.SysRole
+@{
+    ViewBag.Title = "编辑用户组";
+}
+
+<!--头部脚本-->
+@section head
+    {
+    <link href="~/lib/ztree_v3/css/metroStyle/metroStyle.css" rel="stylesheet" />
+    <link href="~/lib/iCheck/css/custom.css" rel="stylesheet" />
+    <style type="text/css">
+        .ztree li ul.line { height: initial; }
+    </style>
+}
+
+<!--头部脚本 end-->
+<!--Panel-->
+@section nav
+    {
+    <div class="ibox-title">
+        <h5>编辑后台用户</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="glyphicon glyphicon-arrow-left" onclick="javascript: window.history.go(-1)"></i>
+            </a>
+        </div>
+    </div>
+}
+<!--Panel end-->
+<!-- 路径导航 -->
+<div class="row">
+    <div class="col-sm-4">
+        <ol class="breadcrumb">
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="/Admin/SysRole/Index">用户组管理</a></li>
+            <li><strong>编辑</strong></li>
+        </ol>
+    </div>
+
+    <div style="height: 40px;"></div>
+</div>
+<!-- 路径导航  end -->
+<!--Main Body-->
+
+<div class="clients-list">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1">基本信息</a></li>
+        <li><a data-toggle="tab" href="#tab-2">权限信息</a></li>
+    </ul>
+    <form method="post" class="form-horizontal" onsubmit="configm_before()">
+        @Html.AntiForgeryToken()
+        <input type="hidden" id="hid_qx" name="hid_qx" value="" />
+        
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div style="margin-top:20px;"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.RoleName)</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.RoleName, new { @class = "form-control", placeholder = "用户组名称" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.RoleName)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group" style="display:none;">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.IsAdmin) </label>
+                    <div class="col-sm-10">
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.IsAdmin, true, new { @id = "rb_is_admin_1" }) <i></i> 正常</label>
+                        </div>
+                        <div class="radio-inline i-checks">
+                            <label>@Html.RadioButtonFor(x => x.IsAdmin, false, new { @id = "rb_is_admin_2" }) <i></i> 禁用</label>
+                        </div>
+                        <span class="help-block m-b-none">管理员组有全部权限</span>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed" style="display:none;"></div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.RoleDesc)</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextAreaFor(p => p.RoleDesc, new { @class = "form-control", placeholder = "用户组说明", style = "height:100px" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.RoleDesc)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+            </div>
+
+            <div id="tab-2" class="tab-pane">
+                <div class="form-group" style="margin-top:25px;">
+                    <div class="clear"></div>
+                    <div class="col-sm-4">
+                        <!--col-sm-offset-1-->
+                        <ul id="tree" class="ztree"></ul>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <button class="btn btn-info" type="submit">保存内容</button>&nbsp;
+                    <button class="btn btn-white" type="reset">取消</button>
+
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<!-- Main Body end-->
+<!--底部脚本-->
+@section foot
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="~/lib/jquery-validation/dist/messages_zh.min.js"></script>
+
+    <script src="~/lib/iCheck/icheck.min.js"></script>
+
+    <script src="~/lib/ztree_v3/js/jquery.ztree.core.min.js"></script>
+    <script src="~/lib/ztree_v3/js/jquery.ztree.excheck.min.js"></script>
+
+    <script type="text/javascript">
+
+        var setting = {
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            callback: {
+                onCheck: zTreeOnCheck
+            }
+        };
+
+        var zNodes = @Html.Raw(ViewData["Tree"]);
+
+        var code;
+
+        function setCheck() {
+            var zTree = $.fn.zTree.getZTreeObj("tree");
+            zTree.setting.check.chkboxType = { "Y": "ps", "N": "ps" };
+        }
+
+        function zTreeOnCheck(event, treeId, treeNode) {
+            //alert(treeNode.tId + ", " + treeNode.name + "," + treeNode.checked);
+
+            var str_qx = "";
+            var zTree = $.fn.zTree.getZTreeObj("tree");
+            var array = zTree.getCheckedNodes(true);
+            for (var i = 0; i < array.length; i++) {
+                if(!array[i].isParent)
+                {
+                    str_qx = str_qx + array[i].id + ",";
+                }
+            }
+            if (str_qx.length > 0)
+            {
+                str_qx = str_qx.substring(0, str_qx.length - 1);
+            }
+            $("#hid_qx").val(str_qx);
+        };
+
+        $(document).ready(function(){
+            $.fn.zTree.init($("#tree"), setting, zNodes);
+            setCheck();
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+        });
+
+        $(function () {
+            @if(!ViewData.ModelState.IsValid)
+            {
+                @:layer.msg('数据未验证通过，请仔细检查', { offset: 0, shift: 6 });
+            }
+        });
+    </script>
+}
+<!--底部脚本 end-->

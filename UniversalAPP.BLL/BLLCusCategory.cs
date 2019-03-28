@@ -13,9 +13,24 @@ namespace UniversalAPP.BLL
     /// <summary>
     /// 无限级分类演示
     /// </summary>
-    public class BLLCusCategory:BaseBLL
+    public class BLLCusCategory : BaseBLL
     {
         public BLLCusCategory(EFCore.EFDBContext context) { this.db = context; }
+
+        ///// <summary>
+        ///// 删除
+        ///// </summary>
+        ///// <param name="id"></param>
+        ///// <returns></returns>
+        //public Task<int> Del(int id)
+        //{
+        //    if (id <= 0) return Task.Factory.StartNew(() => { return -1; });
+        //    var ids = GetChildIDStr(id);
+        //    if (string.IsNullOrWhiteSpace(ids)) return Task.Factory.StartNew(() => { return -1; });
+        //    var tableName = db.Model.FindEntityType(typeof(Entity.CusCategory).FullName).Relational().TableName;
+        //    var del_sql = $"Delete {tableName} Where ID in({ids})";
+        //    return db.Database.ExecuteSqlCommandAsync(del_sql);
+        //}
 
         /// <summary>
         /// 添加分类数据
@@ -24,8 +39,8 @@ namespace UniversalAPP.BLL
         public Task<int> Add(Entity.CusCategory entity)
         {
             if (entity == null)
-                return Task.Factory.StartNew(()=> { return -1; });
-            
+                return Task.Factory.StartNew(() => { return -1; });
+
             Entity.CusCategory p_entity = null;
             if (entity.PID != null)
             {
@@ -52,7 +67,7 @@ namespace UniversalAPP.BLL
         public Task<int> Modify(Entity.CusCategory entity)
         {
             if (entity == null)
-                return Task.Factory.StartNew(()=> { return -1; });
+                return Task.Factory.StartNew(() => { return -1; });
 
             Entity.CusCategory p_entity = null;
             if (entity.PID != null)
@@ -96,23 +111,32 @@ namespace UniversalAPP.BLL
         public string GetChildIDStr(int id)
         {
             string Sql = $"select dbo.fn_GetChildCusCategoryStr({id}) as idstr";
-            string result = string.Empty;
-            using (var connection = db.Database.GetDbConnection())
-            {
-                connection.Open();
-                using (var command = connection.CreateCommand())
-                {
-                    command.CommandText = Sql;
-                    using (SqlDataReader reader = command.ExecuteReader() as SqlDataReader)
-                    {
-                        while (reader.Read()) result = reader["idstr"].ToString();
-                    }
-                }
-            }
-            return result;
+
+            var str = db.Database.SqlQuery<CusCategoryChildIDStr>(Sql);
+            return str.FirstOrDefault()?.idstr;
+            //string result = string.Empty;
+            //using (var connection = db.Database.GetDbConnection())
+            //{
+            //    connection.Open();
+            //    using (var command = connection.CreateCommand())
+            //    {
+            //        command.CommandText = Sql;
+            //        using (SqlDataReader reader = command.ExecuteReader() as SqlDataReader)
+            //        {
+            //            while (reader.Read()) result = reader["idstr"].ToString();
+            //        }
+            //    }
+            //}
+            //return result;
         }
 
 
     }
-    
+
+    internal class CusCategoryChildIDStr
+    {
+        public string idstr { get; set; }
+    }
+
+
 }

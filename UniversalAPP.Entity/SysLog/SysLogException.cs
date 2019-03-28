@@ -25,13 +25,12 @@ namespace UniversalAPP.Entity
         /// <summary>
         /// 错误位置
         /// </summary>
-        [Required, MaxLength(50)]
+        [MaxLength(50)]
         public string Source { get; set; }
 
         /// <summary>
         /// 堆栈信息
         /// </summary>
-        [Required]
         public string StackTrace { get; set; }
         /// <summary>
         /// 发生时间

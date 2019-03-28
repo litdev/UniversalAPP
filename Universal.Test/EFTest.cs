@@ -10,7 +10,7 @@ namespace UniversalAPP.Test
         [TestMethod]
         public async Task Test()
         {
-            string connectionString = "Data Source=120.25.216.194,3763;database=dbcore;uid=expdemo;pwd=exp1234;";
+            string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=UniversalCoreAPPDB;Trusted_Connection=True;MultipleActiveResultSets=true;";
             var context = new EFCore.EFDBContext(connectionString);
 
             //BLL.DynamicBLL<Entity.SysUser> bll = new BLL.DynamicBLL<Entity.SysUser>(context);
@@ -34,12 +34,16 @@ namespace UniversalAPP.Test
 
             //var ss = bll.DelByIds("100,102,103");
 
-            BLL.BLLCusCategory bll = new BLL.BLLCusCategory(context);
-            //var ss = bll.GetChildIDStr(1);
-            var ss = await bll.GetList(true, 6);
-            var sss = await bll.GetList(false, 1);
+            //BLL.BLLCusCategory bll = new BLL.BLLCusCategory(context);
+            ////var ss = bll.GetChildIDStr(1);
+            //var ss = await bll.GetList(true, 6);
+            //var sss = await bll.GetList(false, 1);
+            var is_post = false;
+            //BLL.DynamicBLL<Entity.AppVersion> bll = new BLL.DynamicBLL<Entity.AppVersion>(context);
+            BLL.BLLSysRoute bll = new BLL.BLLSysRoute(context);
+            var ss = bll.CheckAdminPower(2, false, "appversion/editios", false);
 
-            Assert.AreEqual(1,1);
+            Assert.AreEqual(1, 1);
         }
     }
 }

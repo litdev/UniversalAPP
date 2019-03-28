@@ -121,7 +121,7 @@ namespace UniversalAPP.EFCore
                         PID,
                         Depth,
                         Status,
-                        SortNo,
+                        Weight,
                         AddTime
                     FROM
                         CusCategorys(NOLOCK)
@@ -133,7 +133,7 @@ namespace UniversalAPP.EFCore
                         a.PID PID,
                         a.Depth Depth,
                         a.Status Status,
-                        a.SortNo SortNo,
+                        a.Weight Weight,
                         a.AddTime AddTime
                     FROM
                         CusCategorys(NOLOCK) a JOIN Record b
@@ -146,12 +146,12 @@ namespace UniversalAPP.EFCore
                         PID,
                         Depth,
                         Status,
-                        SortNo,
+                        Weight,
                         AddTime
                     FROM
                         Record
                         WHERE Status=1
-                        ORDER BY SortNo DESC     
+                        ORDER BY Weight DESC     
                     END";
 
             //按照某一个Id查询它及它的所有父级成员存储过程
@@ -166,7 +166,7 @@ namespace UniversalAPP.EFCore
                             PId,
                             Depth,
                             Status,
-                            SortNo,
+                            Weight,
                             AddTime
                         FROM
                             CusCategorys(NOLOCK)
@@ -178,7 +178,7 @@ namespace UniversalAPP.EFCore
                             a.PId PId,
                             a.Depth Depth,
                             a.Status Status,
-                            a.SortNo SortNo,
+                            a.Weight Weight,
                             a.AddTime AddTime
                         FROM
                             CusCategorys(NOLOCK) a JOIN Record b
@@ -191,12 +191,12 @@ namespace UniversalAPP.EFCore
                             PId,
                             Depth,
                             Status,
-                            SortNo,
+                            Weight,
                             AddTime
                         FROM
                             Record
                             WHERE Status=1
-                            ORDER BY SortNo DESC
+                            ORDER BY Weight DESC
      
                         END";
 
@@ -265,14 +265,14 @@ namespace UniversalAPP.EFCore
                 end
                 ";
 
-            ////按照某一个Id查询它及它的所有父级成员存储过程
-            //context.Database.ExecuteSqlCommand(SQLGetParentCusCategory);
-            ////按照某一个Id查询它及它的所有子级成员存储过程
-            //context.Database.ExecuteSqlCommand(SQLGetChildCusCategory);
-            ////获取所有子类的id，以逗号分割
-            //context.Database.ExecuteSqlCommand(SQLFunGetChildCusCategoryStr);
-            ////分割字符串，通用函数
-            //context.Database.ExecuteSqlCommand(SQLSplitString);
+            //按照某一个Id查询它及它的所有父级成员存储过程
+            context.Database.ExecuteSqlCommand(SQLGetParentCusCategory);
+            //按照某一个Id查询它及它的所有子级成员存储过程
+            context.Database.ExecuteSqlCommand(SQLGetChildCusCategory);
+            //获取所有子类的id，以逗号分割
+            context.Database.ExecuteSqlCommand(SQLFunGetChildCusCategoryStr);
+            //分割字符串，通用函数
+            context.Database.ExecuteSqlCommand(SQLSplitString);
 
 
             #endregion

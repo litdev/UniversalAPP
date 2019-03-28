@@ -1,4 +1,4 @@
-﻿@{ 
+﻿@{
     Layout = null;
 }
 <!DOCTYPE html>
@@ -9,14 +9,12 @@
 <body>
     <h1>发生错误</h1>
     <h3>
-        @{ 
+        @{
             var ex = (System.Exception)ViewData["Exception"];
-            <span>
-                @if(ex != null)
-                {
-                    @:ex.Message
-                }
-            </span>
+            @if (ex != null)
+            {
+                <span>@ex.Message</span>
+            }
         }
     </h3>
 </body>

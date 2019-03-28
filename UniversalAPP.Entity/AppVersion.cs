@@ -35,6 +35,9 @@ namespace UniversalAPP.Entity
         public AppVersion()
         {
             this.AddTime = DateTime.Now;
+            this.Platforms = APPVersionPlatforms.Android;
+            this.APPType = APPVersionType.Standard;
+            this.LogoImg = "NULL";
         }
 
 
@@ -48,7 +51,7 @@ namespace UniversalAPP.Entity
         {
             get
             {
-                return Tools.EnumHelper.GetDescription<APPVersionPlatforms>(this.Platforms);
+                return Tools.EnumHelper.GetDescription(Platforms);
             }
         }
 
@@ -80,38 +83,39 @@ namespace UniversalAPP.Entity
         {
             get
             {
-                return Tools.EnumHelper.GetDescription<APPVersionType>(this.APPType);
+
+                return Tools.EnumHelper.GetDescription(APPType);
             }
         }
 
-        [Required, MaxLength(100), Display(Name = "文件MD5值")]
+        [MaxLength(100), Display(Name = "文件MD5值")]
         public string MD5 { get; set; }
 
-        [Required, Display(Name = "文件大小")]
+        [Display(Name = "文件大小")]
         public long Size { get; set; }
 
         /// <summary>
         /// 版本
         /// </summary>
-        [Required, MaxLength(20), Display(Name = "版本号")]
+        [Required,MaxLength(20), Display(Name = "版本号")]
         public string Version { get; set; }
 
         [Required, Display(Name = "升级号")]
         public int VersionCode { get; set; }
 
-        [Required, MaxLength(255), Display(Name = "Logo地址")]
+        [MaxLength(255), Display(Name = "Logo地址")]
         public string LogoImg { get; set; }
 
         /// <summary>
         /// 下载地址
         /// </summary>
-        [Required, MaxLength(255), Display(Name = "下载地址")]
+        [MaxLength(255), Display(Name = "下载地址")]
         public string DownUrl { get; set; }
 
         [MaxLength(500), Display(Name = "链接地址(IOS)")]
         public string LinkUrl { get; set; }
 
-        [Required, MaxLength(500), Display(Name = "更新介绍")]
+        [MaxLength(500), Display(Name = "更新介绍")]
         public string Content { get; set; }
 
         [Required, Display(Name = "发布时间")]

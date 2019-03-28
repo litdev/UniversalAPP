@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Options;
 
 namespace UniversalAPP.Web
 {
@@ -16,14 +17,18 @@ namespace UniversalAPP.Web
         private readonly ILogger<CustomExceptionFilterAttribute> _logger;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IModelMetadataProvider _modelMetadataProvider;
+        private Models.SiteBasicConfig _config_basic;
+        protected EFCore.EFDBContext _db_context;
 
 
 
-        public CustomExceptionFilterAttribute(IHostingEnvironment hostingEnvironment, IModelMetadataProvider modelMetadataProvider, ILoggerFactory loggerFactory)
+        public CustomExceptionFilterAttribute(IHostingEnvironment hostingEnvironment, IModelMetadataProvider modelMetadataProvider, ILoggerFactory loggerFactory, IOptionsSnapshot<Models.SiteBasicConfig> appkeys, EFCore.EFDBContext db)
         {
             _hostingEnvironment = hostingEnvironment;
             _modelMetadataProvider = modelMetadataProvider;
             _logger = loggerFactory.CreateLogger<CustomExceptionFilterAttribute>();
+            _config_basic = appkeys.Value;
+            _db_context = db;
         }
 
         public void OnException(ExceptionContext context)
@@ -31,7 +36,7 @@ namespace UniversalAPP.Web
             _logger.LogError("Exception Execute! Message:" + context.Exception.Message);
 
             //开发环境不对异常做处理，抛出最详细的异常信息
-            if(_hostingEnvironment.IsDevelopment()) return;
+            if (_hostingEnvironment.IsDevelopment()) return;
 
             //接口异常处理
             if (context.HttpContext.Request.Path.StartsWithSegments("/api", StringComparison.OrdinalIgnoreCase))
@@ -44,11 +49,12 @@ namespace UniversalAPP.Web
                 context.ExceptionHandled = true;
 
             }
-            else if(context.HttpContext.Request.Path.StartsWithSegments("/admin", StringComparison.OrdinalIgnoreCase))
+            else if (context.HttpContext.Request.Path.StartsWithSegments("/admin", StringComparison.OrdinalIgnoreCase))
             {
                 //后台管理的异常
-
-            }else
+                LogInDB(context.Exception);
+            }
+            else
             {
                 //前台页面的异常
                 var result_view = new ViewResult { StatusCode = 400, ViewName = "Error" };
@@ -59,6 +65,20 @@ namespace UniversalAPP.Web
                 context.ExceptionHandled = true;
             }
         }
+
+        private void LogInDB(Exception ex)
+        {
+            if (!_config_basic.LogExceptionInDB) return;
+            var entity = new Entity.SysLogException()
+            {
+                AddTime = DateTime.Now,
+                Message = ex.Message,
+                Source = ex.Source,
+                StackTrace = ex.StackTrace
+            };
+            new BLL.DynamicBLL<Entity.SysLogException>(_db_context).Add(entity);
+         }
+
     }
 
 }

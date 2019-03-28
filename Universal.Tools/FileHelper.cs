@@ -30,6 +30,33 @@ namespace UniversalAPP.Tools
         }
 
         /// <summary>
+        /// 计算文件的MD5校验
+        /// </summary>
+        /// <param name="filePath">文件路径</param>
+        /// <returns></returns>
+        public string GetMD5HashFromFile(string filePath)
+        {
+            try
+            {
+                FileStream file = new FileStream(IsAbsolute(filePath) ? filePath : MapPath(filePath), FileMode.Open);
+                System.Security.Cryptography.MD5 md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+                byte[] retVal = md5.ComputeHash(file);
+                file.Close();
+
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < retVal.Length; i++)
+                {
+                    sb.Append(retVal[i].ToString("x2"));
+                }
+                return sb.ToString();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("GetMD5HashFromFile() fail,error:" + ex.Message);
+            }
+        }
+
+        /// <summary>
         /// 获取文件绝对路径
         /// </summary>
         /// <param name="path">文件路径</param>
@@ -109,7 +136,7 @@ namespace UniversalAPP.Tools
         {
             try
             {
-                if (!IsExist(path, isDirectory))
+                if (IsExist(path, isDirectory))
                 {
                     if (isDirectory)
                         Directory.Delete(IsAbsolute(path) ? path : MapPath(path));
@@ -145,6 +172,17 @@ namespace UniversalAPP.Tools
                 }
             }
         }
+        
+        /// <summary>
+        /// 获取文件大小
+        /// </summary>
+        /// <returns></returns>
+        public long GetFileSize(string path)
+        {
+            if (!IsExist(path,false)) return 0;
+            FileInfo fileInfo = new FileInfo(IsAbsolute(path) ? path : MapPath(path));
+            return fileInfo.Length;            
+        }
 
         /// <summary>
         /// 复制文件内容到目标文件夹
@@ -175,7 +213,7 @@ namespace UniversalAPP.Tools
                 //如果目标目录存在同名文件则删除
                 if (IsExist(Path.Combine(IsAbsolute(targetPath) ? targetPath : MapPath(targetPath), newName), false))
                 {
-                    DeleteFiles(Path.Combine(IsAbsolute(targetPath) ? targetPath : MapPath(targetPath), newName), true);
+                    DeleteFiles(Path.Combine(IsAbsolute(targetPath) ? targetPath : MapPath(targetPath), newName), false);
                 }
             }
 
@@ -237,6 +275,23 @@ namespace UniversalAPP.Tools
             return Path.GetExtension(IsAbsolute(path) ? path : MapPath(path));
         }
 
+        /// <summary>
+        /// 返回文件扩展名，不含“.” 截取文件名方式
+        /// </summary>
+        /// <param name="_filepath">文件全名称</param>
+        /// <returns>string</returns>
+        public string GetFileExtNoFile(string _filepath)
+        {
+            if (string.IsNullOrEmpty(_filepath))
+            {
+                return "";
+            }
+            if (_filepath.LastIndexOf(".") > 0)
+            {
+                return _filepath.Substring(_filepath.LastIndexOf(".") + 1); //文件扩展名，不含“.”
+            }
+            return "";
+        }
 
     }
 }

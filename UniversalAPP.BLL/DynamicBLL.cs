@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.DynamicLinq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System.Data.SqlClient;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace UniversalAPP.BLL
 {
@@ -47,6 +48,75 @@ namespace UniversalAPP.BLL
         }
 
         #endregion
+
+        #region 修改
+
+        /// <summary>
+        /// 修改实体
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public int Modify(T entity)
+        {
+            EntityEntry entry = db.Entry<T>(entity);
+            entry.State = EntityState.Modified;
+            return db.SaveChanges();
+        }
+
+        /// <summary>
+        /// 修改实体 Async
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public Task<int> ModifyAsync(T entity)
+        {
+            EntityEntry entry = db.Entry<T>(entity);
+            entry.State = EntityState.Modified;
+            return db.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 修改实体，指定修改属性
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="propertyNames"></param>
+        /// <returns></returns>
+        public  int Modify(T entity,params string [] propertyNames)
+        {
+            //将对象添加到EF中
+            EntityEntry entry = db.Entry<T>(entity);
+            //先设置对象的包装状态为 Unchanged
+            entry.State = EntityState.Unchanged;
+            foreach (string propertyName in propertyNames)
+            {
+                //将每个被修改的属性的状态设置为已修改状态；这样在后面生成的修改语句时，就只为标识为已修改的属性更新
+                entry.Property(propertyName).IsModified = true;
+            }
+            return db.SaveChanges();
+        }
+
+        /// <summary>
+        /// 修改实体，指定修改属性  Asnyc
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="propertyNames"></param>
+        /// <returns></returns>
+        public Task<int> ModifyAsync(T entity, params string[] propertyNames)
+        {
+            //将对象添加到EF中
+            EntityEntry entry = db.Entry<T>(entity);
+            //先设置对象的包装状态为 Unchanged
+            entry.State = EntityState.Unchanged;
+            foreach (string propertyName in propertyNames)
+            {
+                //将每个被修改的属性的状态设置为已修改状态；这样在后面生成的修改语句时，就只为标识为已修改的属性更新
+                entry.Property(propertyName).IsModified = true;
+            }
+            return db.SaveChangesAsync();
+        }
+
+        #endregion
+
 
         #region 删除
 
@@ -250,6 +320,33 @@ namespace UniversalAPP.BLL
             }
             var page_result = query.OrderBy(orderby).AsNoTracking().PageResult(page_index, page_size);
             var db_data = page_result.Queryable.ToList();
+            result.data = db_data;
+            result.page_count = page_result.PageCount;
+            result.row_count = page_result.RowCount;
+            return result;
+
+        }
+
+        /// <summary>
+        /// 分页 Asnyc
+        /// </summary>
+        /// <param name="page_index">当前第几页</param>
+        /// <param name="page_size">每页大小</param>
+        /// <param name="where">条件语句</param>
+        /// <param name="orderby">排序</param>
+        /// <param name="includePath">关联查询</param>
+        /// <returns></returns>
+        public async Task<Entity.PageEntity<T>> GetPagedListAsnyc(int page_index, int page_size, string includePath, string orderby, string where, params string[] whereArgs)
+        {
+            Entity.PageEntity<T> result = new Entity.PageEntity<T>();
+            var query = db.Set<T>().Where(where, whereArgs);
+            foreach (var path in includePath.Split('|'))
+            {
+                if (!string.IsNullOrWhiteSpace(path))
+                    query = query.Include(path);
+            }
+            var page_result = query.OrderBy(orderby).AsNoTracking().PageResult(page_index, page_size);
+            var db_data = await page_result.Queryable.ToListAsync();
             result.data = db_data;
             result.page_count = page_result.PageCount;
             result.row_count = page_result.RowCount;

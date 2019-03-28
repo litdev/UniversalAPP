@@ -56,15 +56,49 @@
                         <a class="nav-link J_menuItem" href="/Admin/Home/Center"><i class="fa fa-home"></i><span class="nav-label">主页</span></a>
                     </li>
                     @*@if (CheckAdminPower("sysmerchant/Index", false))
-                        {*@
+        {*@
                     <li class="line dk"></li>
                     <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
-                        <span class="ng-scope">店铺</span>
+                        <span class="ng-scope">系统用户</span>
                     </li>
                     <li>
-                        <a class="nav-link J_menuItem" href="/Admin/sysmerchant/Index"><i class="fa fa-globe"></i> <span class="nav-label">店铺管理</span></a>
+                        <a class="nav-link J_menuItem" href="/Admin/SysUser/Index"><i class="fa fa-user"></i> <span class="nav-label">用户管理</span></a>
+                    </li>
+                    <li>
+                        <a class="nav-link J_menuItem" href="/Admin/SysRole/Index"><i class="fa fa-users"></i> <span class="nav-label">用户组管理</span></a>
                     </li>
                     @*}*@
+
+                    <li class="line dk"></li>
+                    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                        <span class="ng-scope">Category</span>
+                    </li>
+                    <li>
+                        <a class="nav-link J_menuItem" href="/Admin/CusCategory/Index"><i class="fa fa-bars"></i> <span class="nav-label">分类管理</span></a>
+                    </li>
+                    <li>
+                        <a class="nav-link J_menuItem" href="/Admin/Demo/Index"><i class="fa fa-bars"></i> <span class="nav-label">强类型表单</span></a>
+                    </li>
+
+
+                    <li class="line dk"></li>
+                    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                        <span class="ng-scope">日志</span>
+                    </li>
+                    <li>
+                        <a class="nav-link J_menuItem" href="/Admin/SysLog/LogMethod"><i class="fa fa-bars"></i> <span class="nav-label">操作日志</span></a>
+                    </li>
+                    <li>
+                        <a class="nav-link J_menuItem" href="/Admin/SysLog/LogException"><i class="fa fa-bars"></i> <span class="nav-label">异常日志</span></a>
+                    </li>
+
+                    <li class="line dk"></li>
+                    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                        <span class="ng-scope">System</span>
+                    </li>
+                    <li>
+                        <a class="nav-link J_menuItem" href="/Admin/AppVersion/Index"><i class="fa fa-paper-plane-o"></i> <span class="nav-label">App版本管理</span></a>
+                    </li>
 
                     <li style="height: 100px;">
                     </li>
@@ -212,36 +246,36 @@
             });
         });
 
-            //function to_msg_list()
-            //{
-            //    document.getElementById("J_iframe").src = "/Admin/SysMessage/Index";
-            //}
+                    //function to_msg_list()
+                    //{
+                    //    document.getElementById("J_iframe").src = "/Admin/SysMessage/Index";
+                    //}
 
-            //function setMsgRead(obj)
-            //{
-            //    var link =$(obj).attr("link");
-            //    var id =$(obj).attr("d-id");
-            //    $.ajax({
-            //        url: '/Admin/SysMessage/SetMsgRead',
-            //        type: 'POST',
-            //        data:{"id":id},
-            //        datatype: 'json',
-            //        success: function (data) {
-            //            if(data.msg == 0)
-            //            {
-            //                layer.msg(data.msgbox);
-            //            }
-            //        }
-            //    });
+                    //function setMsgRead(obj)
+                    //{
+                    //    var link =$(obj).attr("link");
+                    //    var id =$(obj).attr("d-id");
+                    //    $.ajax({
+                    //        url: '/Admin/SysMessage/SetMsgRead',
+                    //        type: 'POST',
+                    //        data:{"id":id},
+                    //        datatype: 'json',
+                    //        success: function (data) {
+                    //            if(data.msg == 0)
+                    //            {
+                    //                layer.msg(data.msgbox);
+                    //            }
+                    //        }
+                    //    });
 
-            //    if($(obj).attr("open-new-tab"))
-            //    {
-            //        window.open(link)
-            //    }else
-            //    {
-            //        document.getElementById("J_iframe").src = link;
-            //    }
-            //}
+                    //    if($(obj).attr("open-new-tab"))
+                    //    {
+                    //        window.open(link)
+                    //    }else
+                    //    {
+                    //        document.getElementById("J_iframe").src = link;
+                    //    }
+                    //}
 
     </script>
 </body>

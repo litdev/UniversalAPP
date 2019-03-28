@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,14 +23,15 @@ namespace UniversalAPP.Web
 
         public IConfiguration Configuration { get; }
 
-        
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddHttpContextAccessor();
 
-            //Cookie GDPR政策
+            ///Cookie GDPR政策
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -36,7 +39,10 @@ namespace UniversalAPP.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<EFCore.EFDBContext>(options => 
+            //注入配置文件
+            services.Configure<Models.SiteBasicConfig>(Configuration.GetSection("SiteBasicConfig"));
+
+            services.AddDbContext<EFCore.EFDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), p => p.UseRowNumberForPaging()));
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
@@ -59,19 +65,17 @@ namespace UniversalAPP.Web
 
             #endregion
 
-            //注入配置文件
-            services.Configure<Models.SiteBasicConfig>(Configuration.GetSection("SiteBasicConfig"));
-
             //添加MVC及过滤器
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(CustomExceptionFilterAttribute));
-                //options.Filters.Add(typeof(CustomAuthorizationFilterAttribute));
+                options.Filters.Add(typeof(CustomAuthorizationFilterAttribute));
                 //options.Filters.Add(typeof(SimpleResourceFilterAttribute));
                 //options.Filters.Add(typeof(SimpleActionFilterAttribute));
                 //options.Filters.Add(typeof(SimpleResultFilterAttribute));
             }).SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
             services.AddSession();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -101,18 +105,25 @@ namespace UniversalAPP.Web
             app.UseAuthentication();
             //图片不存在时返回默认图片
             app.UseDefaultImage(defaultImagePath: Configuration.GetSection("defaultImagePath").Value);
-            
+
             System.Diagnostics.Trace.Listeners.Clear();
             System.Diagnostics.Trace.Listeners.Add(new CustomTraceListener());
-            
+
+            //获取IP
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                //为了在nginx上获取用户端真实IP添加此代码
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             //app.UseCookiePolicy();//增加对于GDPR政策的支持
             app.UseSession();
             app.UseStaticFiles();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name:"areaRoute",
-                    template:"{area:exists}/{controller}/{action=Index}/{id?}");
+                    name: "areaRoute",
+                    template: "{area:exists}/{controller}/{action=Index}/{id?}");
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");

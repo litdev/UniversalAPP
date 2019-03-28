@@ -1,0 +1,162 @@
+﻿@model UniversalAPP.Entity.AppVersion
+@{
+    ViewBag.Title = "编辑安卓版本信息";
+}
+
+<!--头部脚本-->
+@section head
+    {
+    <link href="~/lib/froala-wysiwyg-editor/css/froala_editor.pkgd.min.css" rel="stylesheet" />
+    <link href="~/lib/froala-wysiwyg-editor/css/froala_style.min.css" rel="stylesheet" />
+}
+
+<!--头部脚本 end-->
+<!-- Panel -->
+@section nav
+    {
+    <div class="ibox-title">
+        <h5>编辑安卓版本信息</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="glyphicon glyphicon-arrow-left" onclick="javascript: window.history.go(-1)"></i>
+            </a>
+        </div>
+    </div>
+}
+<!--Panel end-->
+<!-- 路径导航 -->
+
+<div class="row">
+    <div class="col-sm-4">
+        <ol class="breadcrumb">
+            <li><a href="/Admin/Home/Center">主页</a></li>
+            <li><a href="/Admin/AppVersion/Index">测试数据列表</a></li>
+            <li><strong>编辑</strong></li>
+        </ol>
+    </div>
+
+    <div style="height: 40px;"></div>
+</div>
+
+<!-- 路径导航 end -->
+<!--Main Body-->
+
+<div class="clients-list">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1">基本信息</a></li>
+        <li style="display:none;"><a data-toggle="tab" href="#tab-2">其他信息</a></li>
+    </ul>
+    <form method="post" class="form-horizontal" onsubmit="configm_before()">
+        @Html.AntiForgeryToken()
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div style="margin-top:20px;"></div>
+                @Html.HiddenFor(p => p.Size)
+                @Html.HiddenFor(p => p.MD5)
+                @Html.HiddenFor(p => p.VersionCode)
+                @Html.HiddenFor(p => p.AddTime)
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Version)</label>
+
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(p => p.Version, new { @class = "form-control", placeholder = "版本号" })
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.Version)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">APK包</label>
+
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(p => p.DownUrl, new { @class = "form-control", @readonly = "readonly" })
+
+                        <button type="button" class="btn btn-info " onclick="upload()">
+                            <i class="fa fa-upload"></i> 上传文件
+                        </button>
+                    </div>
+                    <label class="col-sm-3 label_msg"> @Html.ValidationMessageFor(p => p.DownUrl)</label>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">@Html.DisplayNameFor(p => p.Content)</label>
+
+                    <div class="col-sm-8">
+                        @Html.TextAreaFor(p => p.Content)
+                    </div>
+                    <label class="col-sm-2 label_msg">@Html.ValidationMessageFor(p => p.Content)</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+            </div>
+
+            <div id="tab-2" class="tab-pane" style="display:none;">
+                <div style="margin-top:20px;"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">普通</label>
+
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control">
+                    </div>
+                    <label class="col-sm-3 label_msg"> 这里是验证消息</label>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <button class="btn btn-info" type="submit">保存内容</button>&nbsp;
+                    <button class="btn btn-white" type="reset">取消</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<!-- Main Body end-->
+<!--底部脚本-->
+@section foot
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="~/lib/jquery-validation/dist/messages_zh.min.js"></script>
+
+    <script src="~/lib/froala-wysiwyg-editor/js/froala_editor.pkgd.min.js"></script>
+    <script>
+
+        function upload() {
+            layer.open({
+                type: 2,
+                area: ['700px', '530px'],
+                fix: false, //不固定
+                maxmin: false,
+                content: ['@Url.Action("UploadFile", "Tools", new { type = "APK", folder = "app", num = 1,call_func= "set_upload_file", call_back_ele = Html.NameFor(p=>p.DownUrl), Area = "Admin" })', 'no']
+            });
+        }
+
+        //回掉方法，参数固定
+        function set_upload_file(path) {
+            if (path.length != 0) {
+                $("#DownUrl").val(path);
+            }
+        }
+
+        $(function () {
+            InitFroalaTextArea("Content");
+            //InitFroalaTextAreaSimple("Content");
+
+            @if(!ViewData.ModelState.IsValid)
+            {
+                @:layer.msg('数据未验证通过，请仔细检查', { offset: 0, shift: 6 });
+            }
+        });
+    </script>
+}
+<!--底部脚本 end-->

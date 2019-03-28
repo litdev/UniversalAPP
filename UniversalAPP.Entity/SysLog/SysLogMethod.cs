@@ -10,14 +10,14 @@ namespace UniversalAPP.Entity
     /// </summary>
     public enum SysLogMethodType : byte
     {
-        [Description("添加")]
-        Add = 1,
-        [Description("修改")]
-        Update = 2,
-        [Description("删除")]
-        Delete = 3,
         [Description("登录")]
-        Login = 4
+        Login=1,
+        [Description("添加")]
+        Add,
+        [Description("修改")]
+        Modify,
+        [Description("删除")]
+        Delete
     }
 
     /// <summary>

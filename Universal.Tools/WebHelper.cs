@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Web;
 
 namespace UniversalAPP.Tools
 {
@@ -305,7 +307,83 @@ namespace UniversalAPP.Tools
             return responseStr;
         }
 
+        #region 编码
 
+        /// <summary>
+        /// HTML解码
+        /// </summary>
+        /// <returns></returns>
+        public static string HtmlDecode(string s)
+        {
+            return HttpUtility.HtmlDecode(s);
+        }
 
+        /// <summary>
+        /// HTML编码
+        /// </summary>
+        /// <returns></returns>
+        public static string HtmlEncode(string s)
+        {
+            return HttpUtility.HtmlEncode(s);
+        }
+
+        /// <summary>
+        /// URL解码
+        /// </summary>
+        /// <returns></returns>
+        public static string UrlDecode(string s)
+        {
+            return HttpUtility.UrlDecode(s);
+        }
+
+        /// <summary>
+        /// URL编码
+        /// </summary>
+        /// <returns></returns>
+        public static string UrlEncode(string s)
+        {
+            return HttpUtility.UrlEncode(s);
+        }
+
+        /// <summary>
+        /// URL编码
+        /// </summary>
+        /// <param name="Encoding">编码方式：GB2312</param>
+        /// <returns></returns>
+        public static string UrlEncode(string s, string Encoding)
+        {
+            return HttpUtility.UrlEncode(s, System.Text.Encoding.GetEncoding(Encoding));
+        }
+
+        #endregion
+
+        /// <summary>
+        /// 正则表达式取值
+        /// </summary>
+        /// <param name="HtmlCode">源码</param>
+        /// <param name="RegexString">正则表达式</param>
+        /// <param name="GroupKey">正则表达式分组关键字</param>
+        /// <param name="RightToLeft">是否从右到左</param>
+        /// <returns></returns>
+        public static string[] GetRegValue(string HtmlCode, string RegexString, string GroupKey, bool RightToLeft)
+        {
+            MatchCollection m;
+            Regex r;
+            if (RightToLeft == true)
+            {
+                r = new Regex(RegexString, RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.RightToLeft);
+            }
+            else
+            {
+                r = new Regex(RegexString, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            }
+            m = r.Matches(HtmlCode);
+            string[] MatchValue = new string[m.Count];
+            for (int i = 0; i < m.Count; i++)
+            {
+                MatchValue[i] = m[i].Groups[GroupKey].Value;
+            }
+            return MatchValue;
+        }
     }
 }

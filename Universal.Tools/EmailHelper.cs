@@ -58,7 +58,7 @@ namespace UniversalAPP.Tools
             emailToolHelper.mailSubject = title;
             emailToolHelper.mailToArray = to_user.Split(',');
             emailToolHelper.mailBody = email_content;
-            return true;//emailToolHelper.Send();
+            return emailToolHelper.Send();
 
         }
     }

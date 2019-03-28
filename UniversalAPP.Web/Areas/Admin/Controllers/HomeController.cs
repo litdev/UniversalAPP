@@ -59,10 +59,15 @@ namespace UniversalAPP.Web.Areas.Admin.Controllers
 
             string input_pwd = Tools.AESHelper.Encrypt(viewModel.password, GlobalKeyConfig.AESKey, GlobalKeyConfig.AESIV);
             BLL.DynamicBLL<Entity.SysUser> bll = new BLL.DynamicBLL<Entity.SysUser>(_db_context);
-            var entity_user = await bll.GetModelAsync("", "ID ASC", "UserName=@0 and Password=@1", viewModel.user_name, input_pwd);
+            var entity_user = await bll.GetModelAsync("SysRole", "ID ASC", "UserName=@0 and Password=@1", viewModel.user_name, input_pwd);
             if (entity_user == null)
             {
                 ModelState.AddModelError("user_name", "用户名不存在或密码错误");
+                return View(viewModel);
+            }
+            if(entity_user.SysRole == null)
+            {
+                ModelState.AddModelError("user_name", "用户组不存在");
                 return View(viewModel);
             }
             if (!entity_user.Status)
@@ -76,6 +81,7 @@ namespace UniversalAPP.Web.Areas.Admin.Controllers
             identity.AddClaim(new Claim(ClaimTypes.Sid, entity_user.ID.ToString()));
             identity.AddClaim(new Claim(ClaimTypes.Name, entity_user.UserName));
             identity.AddClaim(new Claim(ClaimTypes.Role, entity_user.SysRoleID.ToString()));
+            identity.AddClaim(new Claim(ClaimTypes.GroupSid, entity_user.SysRole.IsAdmin.ToString()));//用户所属组是否是超级管理员
             identity.AddClaim(new Claim(ClaimTypes.UserData, entity_user.AvatarOrDefault));
             var expires_time = new AuthenticationProperties();
             if (viewModel.is_rember)
@@ -85,10 +91,10 @@ namespace UniversalAPP.Web.Areas.Admin.Controllers
             }
             await AuthenticationHttpContextExtensions.SignInAsync(HttpContext, new ClaimsPrincipal(identity), expires_time);
             await bll.ExecuteSqlCommandAsync($"Update SysUser set LastLoginTime=getdate() where ID ={entity_user.ID}");
+            AddMethodLog(_config_basic.LogMethodInDB, Entity.SysLogMethodType.Login, "用户登录", entity_user.ID);
             return RedirectToAction("Index");
         }
 
-        [AdminPermission("其他", "后台管理首页")]
         public IActionResult Index()
         {
             return View();

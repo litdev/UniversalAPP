@@ -7,6 +7,8 @@ using Microsoft.Extensions.Options;
 using System.Linq;
 using UniversalAPP.Tools;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace UniversalAPP.Web
 {
@@ -17,14 +19,17 @@ namespace UniversalAPP.Web
     {
         private readonly ILogger<CustomAuthorizationFilterAttribute> _logger;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private EFCore.EFDBContext _db_context;
         private readonly Models.SiteBasicConfig _config;
+        private readonly IModelMetadataProvider _modelMetadataProvider;
 
-        public CustomAuthorizationFilterAttribute(IHostingEnvironment hostingEnvironment, ILoggerFactory loggerFactory, IOptionsSnapshot<Models.SiteBasicConfig> siteConfig)
+        public CustomAuthorizationFilterAttribute(IHostingEnvironment hostingEnvironment, IModelMetadataProvider modelMetadataProvider, ILoggerFactory loggerFactory, EFCore.EFDBContext db, IOptionsSnapshot<Models.SiteBasicConfig> siteConfig)
         {
             _hostingEnvironment = hostingEnvironment;
             _logger = loggerFactory.CreateLogger<CustomAuthorizationFilterAttribute>();
             _config = siteConfig.Value;
-
+            _db_context = db;
+            _modelMetadataProvider = modelMetadataProvider;
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)
@@ -34,22 +39,43 @@ namespace UniversalAPP.Web
                 //如果是开发环境，则跳过验证
                 if (_hostingEnvironment.IsDevelopment()) return;
 
-                APIAuth(context);
+                //APIAuth(context);
                 return;
             }
             else if (context.HttpContext.Request.Path.StartsWithSegments("/admin", StringComparison.OrdinalIgnoreCase))
             {
-                //添加了AllowAnonymous属性则要跳过验证
-                if (context.Filters.Any(p => p is IAllowAnonymousFilter)) return;
-                //判断用户是否登录
+                ////添加了AllowAnonymous属性则要跳过验证
+                //if (context.Filters.Any(p => p is IAllowAnonymousFilter)) return;
+                ////判断用户是否登录
 
 
-                //后台管理的身份验证
+                //后台管理的权限验证
+                //获取控制器上的
+                var check_power = ((Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor)context.ActionDescriptor).MethodInfo.CustomAttributes.Any(p => p.AttributeType == typeof(AdminPermissionAttribute));
+                if (!check_power) return;
+                //验证
                 string controller = context.RouteData.Values["controller"].ToString().ToLower();
                 string action = context.RouteData.Values["action"].ToString().ToLower();
                 string route = controller + "/" + action;
+                var IsPost = context.HttpContext.Request.Method == "POST";
 
-
+                int login_user_id = TypeHelper.ObjectToInt(context.HttpContext.User.FindFirst(ClaimTypes.Sid).Value);
+                int login_user_role_id = TypeHelper.ObjectToInt(context.HttpContext.User.FindFirst(ClaimTypes.Role).Value);
+                bool login_user_role_super = TypeHelper.ObjectToBool(context.HttpContext.User.FindFirst(ClaimTypes.GroupSid).Value);
+                if (!new BLL.BLLSysRoute(_db_context).CheckAdminPower(login_user_role_id, login_user_role_super, route, IsPost))
+                {
+                    if (IsPost)
+                    {
+                        ResultAPIAuthMsg(context, "没有权限");
+                    }
+                    else
+                    {
+                        var result_view = new ViewResult { StatusCode = 403, ViewName = "Prompt" };
+                        result_view.ViewData = new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(_modelMetadataProvider, context.ModelState);
+                        result_view.ViewData.Model = new PromptModel("没有权限", "请联系管理员以获取访问权限");
+                        context.Result = result_view;
+                    }
+                }
 
             }
             else

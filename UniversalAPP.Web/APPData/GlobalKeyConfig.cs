@@ -31,5 +31,43 @@ namespace UniversalAPP.Web
         /// </summary>
         public static readonly string Admin_Authentication_Scheme = "Admin_Scheme";
 
+        /// <summary>
+        /// 后台分页默认每页大小
+        /// </summary>
+        public static readonly int Admin_Default_PageSize = 12;
     }
+
+    public enum AdminFileUploadType
+    {
+        /// <summary>
+        /// 一张照片
+        /// </summary>
+        OnePicture,
+
+        /// <summary>
+        /// 多张照片
+        /// </summary>
+        MorePicture,
+
+        /// <summary>
+        /// 安卓安装包
+        /// </summary>
+        APK,
+
+        /// <summary>
+        /// IOS安装包
+        /// </summary>
+        IPA,
+
+        /// <summary>
+        /// 附件压缩包
+        /// </summary>
+        ZIP,
+
+        /// <summary>
+        /// FroalaEditor 富文本编辑器
+        /// </summary>
+        FroalaEditor
+    }
+
 }

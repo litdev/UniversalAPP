@@ -1,30 +1,39 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace UniversalAPP.EFCore
 {
     /// <summary>
     /// 数据库操作上下文
     /// </summary>
-    public class EFDBContext:DbContext
+    public class EFDBContext : DbContext
     {
         private static string ConnectionString;
 
-        public EFDBContext(string connectionString) {
+        public EFDBContext(string connectionString)
+        {
             ConnectionString = connectionString;
         }
 
-        public EFDBContext(DbContextOptions<EFDBContext> options):base(options)
+        public EFDBContext(DbContextOptions<EFDBContext> options) : base(options)
         {
-           
-        }  
-        
+
+        }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            //TODO SQL日志监控，生产环境要禁用
+            var loggerFactory = new LoggerFactory();
+            loggerFactory.AddProvider(new EFLoggerProvider());
+            optionsBuilder.UseLoggerFactory(loggerFactory);
+
             if (!optionsBuilder.IsConfigured)
+            {
                 optionsBuilder.UseSqlServer(ConnectionString, p => p.UseRowNumberForPaging());
+            }
         }
-        
+
 
         public DbSet<Entity.Demo> Demos { get; set; }
 
