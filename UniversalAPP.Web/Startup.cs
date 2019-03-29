@@ -28,7 +28,6 @@ namespace UniversalAPP.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddHttpContextAccessor();
 
             ///Cookie GDPR政策
@@ -41,6 +40,8 @@ namespace UniversalAPP.Web
 
             //注入配置文件
             services.Configure<Models.SiteBasicConfig>(Configuration.GetSection("SiteBasicConfig"));
+            //用户机密
+            //var secrets_val = Configuration.GetSection("Email:Pwd").Value;
 
             services.AddDbContext<EFCore.EFDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), p => p.UseRowNumberForPaging()));

@@ -12,3 +12,5 @@
     Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry = db.Entry<T>(entity);
     entry.State = EntityState.Modified;
     ```
+3. 用户机密，复制```appsettings.Development.json```里的配置到```secrets.json```中，正常获取配置文件的KEY，如果该KEY在```secrets.json```中存在，则优先读取```secrets.json```中的值，否则使用```appsettings.Development.json```的值    
+    >注意，如果是使用了```secrets.json```的值，网站运行中如果更改了机密中的值，系统是不会```reloadOnChange```的，需要项目重新编译运行
