@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Hangfire;
 
 namespace UniversalAPP.Web
 {
@@ -77,6 +78,9 @@ namespace UniversalAPP.Web
             }).SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
             services.AddSession();
 
+            ////Hangfire计划任务
+            //services.AddHangfire(p => p.UseSqlServerStorage(Configuration.GetConnectionString("HangfireConnection")));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -129,6 +133,10 @@ namespace UniversalAPP.Web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            ////Hangfire计划任务
+            //app.UseHangfireServer();
+            //app.UseHangfireDashboard("/hangfire", new DashboardOptions { Authorization = new[] { new HangfireAuthorizationFilter() } });
+
         }
     }
 }
