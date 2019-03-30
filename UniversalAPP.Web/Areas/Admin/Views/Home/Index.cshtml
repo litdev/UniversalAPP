@@ -19,6 +19,9 @@
     <link href="~/css/admin/admin.css" rel="stylesheet" />
 
 </head>
+@{ 
+    var IsSuperRole = bool.Parse(User.FindFirst(GlobalKeyConfig.Admin_Claim_IsSuperAdminRole).Value);
+}
 <body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
     <div id="wrapper">
         <!--左侧导航开始-->
@@ -30,11 +33,7 @@
                 <ul class="nav" id="side-menu">
                     <li class="nav-header">
                         <div class="dropdown profile-element" style="margin:40px;">
-                            @{
-                                var user_avatar = User.Claims.SingleOrDefault(s => s.Type == System.Security.Claims.ClaimTypes.UserData).Value.ToString();
-
-                            }
-                            <span><img alt="image" class="img-circle" width="64" height="64" src="@user_avatar" /></span>
+                            <span><img alt="image" class="img-circle" width="64" height="64" src="@User.FindFirst(GlobalKeyConfig.Admin_Claim_Avatar).Value" /></span>
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="clear">
                                     <span class="block m-t-xs"><strong class="font-bold">@User.Identity.Name</strong></span>
@@ -55,50 +54,71 @@
                     <li>
                         <a class="nav-link J_menuItem" href="/Admin/Home/Center"><i class="fa fa-home"></i><span class="nav-label">主页</span></a>
                     </li>
-                    @*@if (CheckAdminPower("sysmerchant/Index", false))
-        {*@
-                    <li class="line dk"></li>
-                    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
-                        <span class="ng-scope">系统用户</span>
-                    </li>
-                    <li>
-                        <a class="nav-link J_menuItem" href="/Admin/SysUser/Index"><i class="fa fa-user"></i> <span class="nav-label">用户管理</span></a>
-                    </li>
-                    <li>
-                        <a class="nav-link J_menuItem" href="/Admin/SysRole/Index"><i class="fa fa-users"></i> <span class="nav-label">用户组管理</span></a>
-                    </li>
-                    @*}*@
 
-                    <li class="line dk"></li>
-                    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
-                        <span class="ng-scope">Category</span>
-                    </li>
-                    <li>
-                        <a class="nav-link J_menuItem" href="/Admin/CusCategory/Index"><i class="fa fa-bars"></i> <span class="nav-label">分类管理</span></a>
-                    </li>
-                    <li>
-                        <a class="nav-link J_menuItem" href="/Admin/Demo/Index"><i class="fa fa-bars"></i> <span class="nav-label">强类型表单</span></a>
-                    </li>
+                    @if(IsSuperRole || User.HasClaim("sysuser/index", "False"))
+                    {
+                        <li class="line dk"></li>
+                        <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                            <span class="ng-scope">系统用户</span>
+                        </li>
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/SysUser/Index"><i class="fa fa-user"></i> <span class="nav-label">用户管理</span></a>
+                        </li>
+                        @if(IsSuperRole || User.HasClaim("sysrole/index", "False"))
+                        {
+                            <li>
+                                <a class="nav-link J_menuItem" href="/Admin/SysRole/Index"><i class="fa fa-users"></i> <span class="nav-label">用户组管理</span></a>
+                            </li>
+                        }
+
+                    }
+
+                    @if(IsSuperRole || User.HasClaim("cuscategory/index", "False"))
+                    {
+                        <li class="line dk"></li>
+                        <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                            <span class="ng-scope">Category</span>
+                        </li>
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/CusCategory/Index"><i class="fa fa-bars"></i> <span class="nav-label">分类管理</span></a>
+                        </li>
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/Demo/Index"><i class="fa fa-bars"></i> <span class="nav-label">强类型表单</span></a>
+                        </li>
+                    }
 
 
-                    <li class="line dk"></li>
-                    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
-                        <span class="ng-scope">日志</span>
-                    </li>
-                    <li>
-                        <a class="nav-link J_menuItem" href="/Admin/SysLog/LogMethod"><i class="fa fa-bars"></i> <span class="nav-label">操作日志</span></a>
-                    </li>
-                    <li>
-                        <a class="nav-link J_menuItem" href="/Admin/SysLog/LogException"><i class="fa fa-bars"></i> <span class="nav-label">异常日志</span></a>
-                    </li>
+                    @if(IsSuperRole || User.HasClaim("syslog/log", "False"))
+                    {
+                        <li class="line dk"></li>
+                        <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                            <span class="ng-scope">日志</span>
+                        </li>
+                        @if(IsSuperRole || User.HasClaim("syslog/logmethod", "False"))
+                        {
+                            <li>
+                                <a class="nav-link J_menuItem" href="/Admin/SysLog/LogMethod"><i class="fa fa-bars"></i> <span class="nav-label">操作日志</span></a>
+                            </li>
+                        }
+                        @if(IsSuperRole || User.HasClaim("syslog/logexception", "False"))
+                        {
+                            <li>
+                                <a class="nav-link J_menuItem" href="/Admin/SysLog/LogException"><i class="fa fa-bars"></i> <span class="nav-label">异常日志</span></a>
+                            </li>
+                        }
+
+                    }
 
                     <li class="line dk"></li>
                     <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
                         <span class="ng-scope">System</span>
                     </li>
-                    <li>
-                        <a class="nav-link J_menuItem" href="/Admin/AppVersion/Index"><i class="fa fa-paper-plane-o"></i> <span class="nav-label">App版本管理</span></a>
-                    </li>
+                    @if(IsSuperRole || User.HasClaim("appversion/index", "False"))
+                    {
+                        <li>
+                            <a class="nav-link J_menuItem" href="/Admin/AppVersion/Index"><i class="fa fa-paper-plane-o"></i> <span class="nav-label">App版本管理</span></a>
+                        </li>
+                    }
 
                     <li style="height: 100px;">
                     </li>

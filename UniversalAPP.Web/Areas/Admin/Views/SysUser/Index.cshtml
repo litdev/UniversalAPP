@@ -38,15 +38,15 @@
 <!-- 路径导航 end -->
 <!--Main Body-->
 @{ 
-    var CanEdit = (bool)ViewData["CanEdit"];
+    var IsSuperRole = bool.Parse(User.FindFirst(GlobalKeyConfig.Admin_Claim_IsSuperAdminRole).Value);
 }
 <div class="row">
     <div class="col-sm-2">
-        @if(CanEdit)
+        @if(IsSuperRole || User.HasClaim("sysuser/edit", "True"))
         {
             @:<a class="btn btn-white" href="@Url.Action("Edit", "SysUser", new { Area = "Admin" })"><i class="glyphicon glyphicon-plus"></i> 添加</a>
         }
-        @if((bool)ViewData["CanDel"])
+        @if(IsSuperRole || User.HasClaim("sysuser/del", "True"))
         {
             @:<a class="btn btn-white" href="javascript:void(0)" onclick="del('/Admin/SysUser/Del',1,'同时会删除关联的数据，是否继续?')"><i class="glyphicon glyphicon-trash"></i> 删除</a>
         }
@@ -107,7 +107,7 @@
                         <td><i class="glyphicon glyphicon-@(item.Status ? "ok": "remove")"></i></td>
                         <td>@item.RegTime</td>
                         <td>
-                            @if (CanEdit)
+                            @if (IsSuperRole || User.HasClaim("sysuser/edit", "True"))
                             {
                                 @:<a class="btn btn-sm btn-white" href="/Admin/SysUser/Edit?id=@item.ID"><i class="glyphicon glyphicon-edit"></i> 修改</a>
                             }

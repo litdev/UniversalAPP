@@ -41,7 +41,8 @@ namespace UniversalAPP.Test
             var is_post = false;
             //BLL.DynamicBLL<Entity.AppVersion> bll = new BLL.DynamicBLL<Entity.AppVersion>(context);
             BLL.BLLSysRoute bll = new BLL.BLLSysRoute(context);
-            var ss = bll.CheckAdminPower(2, false, "appversion/editios", false);
+            //var ss = bll.CheckAdminPower(2, false, "appversion/editios", false);
+            var sss = bll.GetRoleRouteList(2);
 
             Assert.AreEqual(1, 1);
         }

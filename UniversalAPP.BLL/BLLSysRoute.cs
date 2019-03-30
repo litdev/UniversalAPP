@@ -27,6 +27,17 @@ namespace UniversalAPP.BLL
         }
 
         /// <summary>
+        /// 获取某个组拥有的权限路由
+        /// </summary>
+        /// <param name="role_id"></param>
+        /// <returns></returns>
+        public List<Entity.SysRoute> GetRoleRouteList(int role_id)
+        {
+            string sql = $"select * from SysRoutes where ID in(select SysRouteID from SysRoleRoutes where SysRoleID ={role_id.ToString()})";
+            return db.SysRoutes.FromSql(sql).ToList();
+        }
+
+        /// <summary>
         /// 检查权限
         /// </summary>
         /// <param name="RoleId">用户组ID</param>

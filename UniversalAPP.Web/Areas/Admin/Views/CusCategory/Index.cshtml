@@ -37,15 +37,14 @@
 </div>
 <!-- 路径导航 end -->
 @{ 
-    bool CanEdit = (bool)ViewData["CanEdit"];
+    var IsSuperRole = bool.Parse(User.FindFirst(GlobalKeyConfig.Admin_Claim_IsSuperAdminRole).Value);
 }
 <div class="row">
     <div class="col-sm-2">
-        @if (CanEdit)
+        @if (IsSuperRole || User.HasClaim("cuscategory/edit", "True"))
         {
             @:<a class="btn btn-white" href="@Url.Action("Edit", "CusCategory", new { Area = "Admin" })"><i class="glyphicon glyphicon-plus"></i> 添加</a>
         }
-
     </div>
     <div class="col-sm-4">
         <p></p>
@@ -81,11 +80,11 @@
                     <td>@item.Depth</td>
                     <td>@item.Weight</td>
                     <td>
-                        @if((bool)ViewData["CanDel"])
+                        @if(IsSuperRole || User.HasClaim("cuscategory/del", "True"))
                         {
                             @:<a class="btn btn-sm btn-warning" href="javascript:;" onclick="del_item('/Admin/CusCategory/Del',@item.ID, 1)"><i class="glyphicon glyphicon-trash"></i> 删除</a>
                         }
-                        @if (CanEdit)
+                        @if(IsSuperRole || User.HasClaim("cuscategory/edit", "True"))
                         {
                             @:<a class="btn btn-sm btn-white" href="/Admin/CusCategory/Edit?id=@item.ID"><i class="glyphicon glyphicon-edit"></i> 修改</a>
                         }

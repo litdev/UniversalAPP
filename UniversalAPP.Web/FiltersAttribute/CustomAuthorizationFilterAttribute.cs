@@ -59,10 +59,10 @@ namespace UniversalAPP.Web
                 string route = controller + "/" + action;
                 var IsPost = context.HttpContext.Request.Method == "POST";
 
-                int login_user_id = TypeHelper.ObjectToInt(context.HttpContext.User.FindFirst(ClaimTypes.Sid).Value);
-                int login_user_role_id = TypeHelper.ObjectToInt(context.HttpContext.User.FindFirst(ClaimTypes.Role).Value);
-                bool login_user_role_super = TypeHelper.ObjectToBool(context.HttpContext.User.FindFirst(ClaimTypes.GroupSid).Value);
-                if (!new BLL.BLLSysRoute(_db_context).CheckAdminPower(login_user_role_id, login_user_role_super, route, IsPost))
+                //int login_user_id = TypeHelper.ObjectToInt(context.HttpContext.User.FindFirst(ClaimTypes.Sid).Value);
+                //int login_user_role_id = TypeHelper.ObjectToInt(context.HttpContext.User.FindFirst(GlobalKeyConfig.Admin_Claim_RoleID).Value);
+                bool login_user_role_super = TypeHelper.ObjectToBool(context.HttpContext.User.FindFirst(GlobalKeyConfig.Admin_Claim_IsSuperAdminRole).Value);
+                if (!login_user_role_super && !context.HttpContext.User.HasClaim(route, IsPost.ToString()))
                 {
                     if (IsPost)
                     {

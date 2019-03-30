@@ -13,13 +13,13 @@ namespace UniversalAPP.Web
     {
         protected IHostingEnvironment _env;
         protected EFCore.EFDBContext _db_context;
-        
+
         public BaseAdminController()
         {
             var hca = ServiceLocator.Instance.GetService<IHttpContextAccessor>();
             _env = hca.HttpContext.RequestServices.GetService<IHostingEnvironment>();
             _db_context = hca.HttpContext.RequestServices.GetService<EFCore.EFDBContext>();
-            
+
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace UniversalAPP.Web
         /// <param name="page_key"></param>
         /// <param name="is_post"></param>
         /// <returns></returns>
-        protected bool CheckAdminPower(string page_key,bool is_post)
+        protected bool CheckAdminPower(string page_key, bool is_post)
         {
             if (string.IsNullOrWhiteSpace(page_key))
             {
@@ -126,9 +126,11 @@ namespace UniversalAPP.Web
             }
             page_key = page_key.ToLower();
             //int login_user_id = Tools.TypeHelper.ObjectToInt(HttpContext.User.FindFirst(ClaimTypes.Sid).Value);
-            int login_user_role_id = Tools.TypeHelper.ObjectToInt(HttpContext.User.FindFirst(ClaimTypes.Role).Value);
-            bool login_user_role_super = Tools.TypeHelper.ObjectToBool(HttpContext.User.FindFirst(ClaimTypes.GroupSid).Value);
-            return new BLL.BLLSysRoute(_db_context).CheckAdminPower(login_user_role_id, login_user_role_super, page_key, is_post);
+            //int login_user_role_id = Tools.TypeHelper.ObjectToInt(HttpContext.User.FindFirst(GlobalKeyConfig.Admin_Claim_RoleID).Value);
+            bool login_user_role_super = Tools.TypeHelper.ObjectToBool(HttpContext.User.FindFirst(GlobalKeyConfig.Admin_Claim_IsSuperAdminRole).Value);
+            //return new BLL.BLLSysRoute(_db_context).CheckAdminPower(login_user_role_id, login_user_role_super, page_key, is_post);
+            if (login_user_role_super) return true;
+            return User.HasClaim(page_key, is_post.ToString());
         }
 
         /// <summary>

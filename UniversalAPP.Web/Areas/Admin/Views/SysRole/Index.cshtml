@@ -26,7 +26,7 @@
 <div class="row">
     <div class="col-sm-4">
         <ol class="breadcrumb">
-            <li><a href="/Admin/Home/Center">主页 @ViewData["SSS"] </a></li>
+            <li><a href="/Admin/Home/Center">主页</a></li>
             <li><a href="/Admin/SysRole/Index">用户组管理</a></li>
             <li><strong>用户组列表</strong></li>
         </ol>
@@ -36,16 +36,16 @@
 </div>
 <!--路径导航 end -->
 @{ 
-    bool CanEdit = (bool)ViewData["CanEdit"];
+    var IsSuperRole = bool.Parse(User.FindFirst(GlobalKeyConfig.Admin_Claim_IsSuperAdminRole).Value);
 }
 <!--Main Body-->
 <div class="row">
     <div class="col-sm-2">
-        @if (CanEdit)
+        @if (IsSuperRole || User.HasClaim("sysrole/edit", "True"))
         {
             @:<a class="btn btn-white" href="@Url.Action("Edit", "SysRole", new { Area = "Admin" })"><i class="glyphicon glyphicon-plus"></i> 添加</a>
         }
-        @if((bool)ViewData["CanDel"])
+        @if(IsSuperRole || User.HasClaim("sysrole/del", "True"))
         {
             @:<a class="btn btn-white" href="javascript:void(0)" onclick="del('/Admin/SysRole/Del',1,'同时会删除该组下的用户，是否继续？')"><i class="glyphicon glyphicon-trash"></i> 删除</a>
         }
@@ -99,7 +99,7 @@
                         <td style="display:none;"><i class="glyphicon glyphicon-@(item.IsAdmin ? "ok" : "remove")"></i></td>
                         <td>@item.AddTime</td>
                         <td>
-                            @if (CanEdit)
+                            @if (IsSuperRole || User.HasClaim("sysrole/edit", "True"))
                             {
                                 @:<a class="btn btn-sm btn-white" href="/Admin/SysRole/Edit?id=@item.ID"><i class="glyphicon glyphicon-edit"></i> 修改</a>
                             }

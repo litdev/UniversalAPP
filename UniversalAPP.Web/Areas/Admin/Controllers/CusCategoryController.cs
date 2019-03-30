@@ -31,8 +31,6 @@ namespace UniversalAPP.Web.Areas.Admin.Controllers
         [AdminPermissionAttribute("分类管理", "分类管理首页")]
         public IActionResult Index()
         {
-            ViewData["CanEdit"] = CheckAdminPower("CusCategory/edit", true);
-            ViewData["CanDel"] = CheckAdminPower("CusCategory/del", true);
             return View(LoadCategory());
         }
 

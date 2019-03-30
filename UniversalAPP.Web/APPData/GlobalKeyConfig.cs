@@ -35,6 +35,22 @@ namespace UniversalAPP.Web
         /// 后台分页默认每页大小
         /// </summary>
         public static readonly int Admin_Default_PageSize = 12;
+
+        /// <summary>
+        /// 后台Claim，是否是超级管理组KEY
+        /// </summary>
+        public static readonly string Admin_Claim_IsSuperAdminRole = "IsSuperAdminRole";
+
+        /// <summary>
+        /// 后台Claim，组ID KEY
+        /// </summary>
+        public static readonly string Admin_Claim_RoleID = "Admin_Claim_RoleID";
+
+        /// <summary>
+        /// 后台Claim，用户头像 KEY
+        /// </summary>
+        public static readonly string Admin_Claim_Avatar = "Avatar";
+
     }
 
     public enum AdminFileUploadType

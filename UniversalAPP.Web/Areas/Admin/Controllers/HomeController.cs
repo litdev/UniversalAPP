@@ -80,9 +80,17 @@ namespace UniversalAPP.Web.Areas.Admin.Controllers
             var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
             identity.AddClaim(new Claim(ClaimTypes.Sid, entity_user.ID.ToString()));
             identity.AddClaim(new Claim(ClaimTypes.Name, entity_user.UserName));
-            identity.AddClaim(new Claim(ClaimTypes.Role, entity_user.SysRoleID.ToString()));
-            identity.AddClaim(new Claim(ClaimTypes.GroupSid, entity_user.SysRole.IsAdmin.ToString()));//用户所属组是否是超级管理员
-            identity.AddClaim(new Claim(ClaimTypes.UserData, entity_user.AvatarOrDefault));
+            identity.AddClaim(new Claim(GlobalKeyConfig.Admin_Claim_RoleID, entity_user.SysRoleID.ToString()));
+            identity.AddClaim(new Claim(GlobalKeyConfig.Admin_Claim_IsSuperAdminRole, entity_user.SysRole.IsAdmin.ToString()));
+            identity.AddClaim(new Claim(GlobalKeyConfig.Admin_Claim_Avatar, entity_user.AvatarOrDefault));
+            if (!entity_user.SysRole.IsAdmin)
+            {
+                foreach (var item in new BLL.BLLSysRoute(_db_context).GetRoleRouteList(entity_user.SysRoleID))
+                {
+                    identity.AddClaim(new Claim(item.Route, item.IsPost.ToString()));
+                }
+            }
+
             var expires_time = new AuthenticationProperties();
             if (viewModel.is_rember)
             {

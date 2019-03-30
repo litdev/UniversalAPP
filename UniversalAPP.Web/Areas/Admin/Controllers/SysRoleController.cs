@@ -37,7 +37,6 @@ namespace UniversalAPP.Web.Areas.Admin.Controllers
         [AdminPermissionAttribute("后台用户组", "后台用户组列表")]
         public async Task<IActionResult> Index(int page = 1, string word = "")
         {
-            ViewData["SSS"] = _config_basic.AdminDefaultPageSize;
             var CookieKeyPageSize = CookieKey_PageSize();
             ViewData["CookieKey_PageSize"] = CookieKeyPageSize;
             var CookieKeyOrderBy = CookieKey_OrderBy();

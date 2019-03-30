@@ -28,6 +28,9 @@
 
     @RenderSection("head", required: false)
 
+    @{ 
+        var IsSuperRole = bool.Parse(User.FindFirst(GlobalKeyConfig.Admin_Claim_IsSuperAdminRole).Value);
+    }
 </head>
 <body class="gray-bg">
     <div class="wrapper wrapper-content animated fadeInRight">

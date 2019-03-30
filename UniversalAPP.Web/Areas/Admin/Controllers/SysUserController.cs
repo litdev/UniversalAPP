@@ -64,9 +64,6 @@ namespace UniversalAPP.Web.Areas.Admin.Controllers
             response_model.DataList = db_data.data;
             response_model.total = db_data.row_count;
             response_model.total_page = db_data.page_count;
-
-            ViewData["CanEdit"] = CheckAdminPower("sysuser/edit", true);
-            ViewData["CanDel"] = CheckAdminPower("sysuser/del", true);
             return View(response_model);
         }
 
