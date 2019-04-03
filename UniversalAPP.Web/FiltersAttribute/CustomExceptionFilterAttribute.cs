@@ -46,7 +46,6 @@ namespace UniversalAPP.Web
                 result.ext_str = context.Exception.Message;
 
                 context.Result = new ObjectResult(result);
-                context.ExceptionHandled = true;
 
             }
             else if (context.HttpContext.Request.Path.StartsWithSegments("/admin", StringComparison.OrdinalIgnoreCase))
@@ -60,10 +59,10 @@ namespace UniversalAPP.Web
                 var result_view = new ViewResult { StatusCode = 400, ViewName = "Error" };
                 result_view.ViewData = new ViewDataDictionary(_modelMetadataProvider, context.ModelState);
                 result_view.ViewData.Add("Exception", context.Exception);
-
                 context.Result = result_view;
-                context.ExceptionHandled = true;
+                LogInDB(context.Exception);
             }
+            context.ExceptionHandled = true;
         }
 
         private void LogInDB(Exception ex)
@@ -77,7 +76,7 @@ namespace UniversalAPP.Web
                 StackTrace = ex.StackTrace
             };
             new BLL.DynamicBLL<Entity.SysLogException>(_db_context).Add(entity);
-         }
+        }
 
     }
 

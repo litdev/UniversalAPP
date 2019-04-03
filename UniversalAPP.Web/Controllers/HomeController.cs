@@ -16,7 +16,7 @@ namespace UniversalAPP.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private Models.SiteBasicConfig _config;
-        private readonly EFCore.EFDBContext _context;
+        private readonly EFCore.EFDBContext _db;
         private readonly IHostingEnvironment _env;
 
         public HomeController(IHostingEnvironment environment, ILoggerFactory loggerFactory, IOptionsSnapshot<SiteBasicConfig> appkeys, EFCore.EFDBContext context)
@@ -24,14 +24,13 @@ namespace UniversalAPP.Web.Controllers
             _env = environment;
             _logger = loggerFactory.CreateLogger<HomeController>();
             _config = appkeys.Value;
-            _context = context;
+            _db = context;
         }
 
         public IActionResult Index()
         {
             //System.Diagnostics.Trace.WriteLine($"是否是开发环境下:{_env.IsDevelopment()}");
-
-            return Content(HttpContext.Connection.RemoteIpAddress.ToString());
+            return Content(_env.EnvironmentName + "-" + HttpContext.Connection.RemoteIpAddress.ToString());
         }
         
         public static IConfigurationRoot Configuration { get; set; }

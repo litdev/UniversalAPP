@@ -18,6 +18,17 @@ namespace UniversalAPP.Web.API
     public class TestController : BaseAPIController
     {
         /// <summary>
+        /// 异常接口
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("error")]
+        public UnifiedResultEntity<string> error()
+        {
+            throw new Exception("手动抛出异常");
+        }
+
+        /// <summary>
         /// 测试接口是否通
         /// </summary>
         /// <returns></returns>
@@ -25,7 +36,6 @@ namespace UniversalAPP.Web.API
         [Route("doing")]
         public UnifiedResultEntity<string> doing()
         {
-            //throw new Exception("sss");
             return ResultBasicString(1, "OK", "接口已通");
         }
 
