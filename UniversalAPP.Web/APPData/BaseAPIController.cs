@@ -1,13 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace UniversalAPP.Web
 {
     public class BaseAPIController : ControllerBase
     {
+        protected IHostingEnvironment _env;
+        protected EFCore.EFDBContext _db_context;
+
+        public BaseAPIController()
+        {
+            var hca = ServiceLocator.Instance.GetService<IHttpContextAccessor>();
+            _env = hca.HttpContext.RequestServices.GetService<IHostingEnvironment>();
+            _db_context = hca.HttpContext.RequestServices.GetService<EFCore.EFDBContext>();
+
+        }
 
         /// <summary>
         /// 基础API返回String类型

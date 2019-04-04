@@ -17,6 +17,20 @@ namespace UniversalAPP.Web.API
     [Route("api/Test")]
     public class TestController : BaseAPIController
     {
+
+        private Models.SiteBasicConfig _config_basic;
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="loggerFactory"></param>
+        /// <param name="appkeys"></param>
+        public TestController(IOptionsSnapshot<Web.Models.SiteBasicConfig> appkeys)
+        {
+            _config_basic = appkeys.Value;
+
+        }
+
         /// <summary>
         /// 异常接口
         /// </summary>
@@ -54,6 +68,37 @@ namespace UniversalAPP.Web.API
             resultEntity.data = 222;
             return resultEntity;
         }
+
+        /// <summary>
+        /// 文件上传
+        /// </summary>
+        /// <param name="files">客户端上传文件的KEY必须为“files”，多个文件各个名字都写“files”，不然取不到文件</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("uploads")]
+        public UnifiedResultEntity<List<string>> Upload(IList<IFormFile> files)
+        {
+            UnifiedResultEntity<List<string>> result_entity = new UnifiedResultEntity<List<string>>();
+            if (files.Count == 0)
+            {
+                result_entity.msgbox = "请上传文件";
+                return result_entity;
+            }
+            List<string> list_server_files = new List<string>();
+            string save_path = "/files/api/";
+            UploadHelper uploadHelper = new UploadHelper(_env);
+            foreach (var item in files)
+            {
+                var temp_up = uploadHelper.Upload(item, save_path);
+                if (temp_up.msg == 1) list_server_files.Add(temp_up.data);
+            }
+
+            result_entity.msg = 1;
+            result_entity.msgbox = $"成功上传{list_server_files.Count}个文件";
+            result_entity.data = list_server_files;
+            return result_entity;
+        }
+
 
     }
 }
