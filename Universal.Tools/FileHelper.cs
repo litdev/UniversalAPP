@@ -18,15 +18,15 @@ namespace UniversalAPP.Tools
         /// <summary>
         /// 环境根目录
         /// </summary>
-        private static string _ContentRootPath = "";
+        private static string _WebRootPath = "";
 
         /// <summary>
         /// 初始化
         /// </summary>
-        /// <param name="ContentRootPath">IHostingEnvironment.ContentRootPath</param>
-        public FileHelper(string ContentRootPath)
+        /// <param name="WebRootPath">IHostingEnvironment.WebRootPath</param>
+        public FileHelper(string WebRootPath)
         {
-            _ContentRootPath = ContentRootPath;
+            _WebRootPath = WebRootPath;
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace UniversalAPP.Tools
         /// <returns></returns>
         public string MapPath(string path)
         {
-            var result = IsAbsolute(path) ? path : Path.Combine(_ContentRootPath, path.TrimStart('~', '/').Replace("/", DirectorySeparatorChar));
+            var result = IsAbsolute(path) ? path : Path.Combine(_WebRootPath, path.TrimStart('~', '/').Replace("/", DirectorySeparatorChar));
             return result;
         }
 
