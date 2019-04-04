@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ImageMagick;
 
 namespace UniversalAPP.Web.Areas.Admin.Controllers
 {
@@ -130,6 +131,30 @@ namespace UniversalAPP.Web.Areas.Admin.Controllers
             return ResultBasicString(0, "aaa", "dsdf");
         }
 
+        /// <summary>
+        /// 生成验证码
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult Verification()
+        {
+            using (MagickImage image = new MagickImage(MagickColors.White, 100, 40))
+            {
+                new Drawables()
+                    .TextEncoding(System.Text.Encoding.UTF8)
+                    .TextAntialias(true)
+                    .FontPointSize(40)
+                    .FillColor(MagickColors.Green)
+                    .Gravity(Gravity.Center)
+                    .Font("Microsoft YaHei & Microsoft YaHei UI")
+                    .Rotation(-8)
+                    .Text(1, 1, "ABDR")
+                    .Draw(image);
+                image.Quality = 70;
+                image.AddNoise(NoiseType.Poisson);//噪点
+                return File(image.ToByteArray(MagickFormat.Jpg), "image/jpg");
+            }
+        }
 
     }
 

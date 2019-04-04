@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace UniversalAPP.Tools
@@ -77,6 +77,18 @@ namespace UniversalAPP.Tools
         public static bool IsAbsolute(string path)
         {
             return Path.VolumeSeparatorChar == ':' ? path.IndexOf(Path.VolumeSeparatorChar) > 0 : path.IndexOf('\\') > 0;
+        }
+
+        /// <summary>
+        /// 是否是图片
+        /// </summary>
+        /// <param name="ext"></param>
+        /// <returns></returns>
+        public static bool IsImage(string ext)
+        {
+            string[] image_exts = { "jpg", "jpeg", "gif", "png", "bmp" };
+            return image_exts.Contains(ext.ToLower());
+
         }
 
         /// <summary>
@@ -172,16 +184,16 @@ namespace UniversalAPP.Tools
                 }
             }
         }
-        
+
         /// <summary>
         /// 获取文件大小
         /// </summary>
         /// <returns></returns>
         public long GetFileSize(string path)
         {
-            if (!IsExist(path,false)) return 0;
+            if (!IsExist(path, false)) return 0;
             FileInfo fileInfo = new FileInfo(IsAbsolute(path) ? path : MapPath(path));
-            return fileInfo.Length;            
+            return fileInfo.Length;
         }
 
         /// <summary>
@@ -201,7 +213,7 @@ namespace UniversalAPP.Tools
         /// <param name="sourcePath">源文件</param>
         /// <param name="targetPath">目标目录</param>
         /// <param name="newName">新文件名</param>
-        public void Move(string sourcePath, string targetPath,string newName)
+        public void Move(string sourcePath, string targetPath, string newName)
         {
             //如果目标目录不存在则创建
             if (!IsExist(targetPath, true))
@@ -241,7 +253,7 @@ namespace UniversalAPP.Tools
                     DeleteFiles(Path.Combine(IsAbsolute(targetPath) ? targetPath : MapPath(targetPath), sourceFileName), true);
                 }
             }
-            
+
             File.Move(IsAbsolute(sourcePath) ? sourcePath : MapPath(sourcePath), Path.Combine(IsAbsolute(targetPath) ? targetPath : MapPath(targetPath), sourceFileName));
         }
 

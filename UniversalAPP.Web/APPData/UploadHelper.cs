@@ -71,7 +71,7 @@ namespace UniversalAPP.Web
         }
 
 
-        public UnifiedResultEntity<string> Upload(Microsoft.AspNetCore.Http.IFormFile formFile, string serverPath, bool isThumb = true)
+        public UnifiedResultEntity<string> Upload(Microsoft.AspNetCore.Http.IFormFile formFile, string serverPath)
         {
             UnifiedResultEntity<string> response_entity = new UnifiedResultEntity<string>();
             response_entity.msg = 0;
@@ -102,6 +102,12 @@ namespace UniversalAPP.Web
             var temp_md5_server_path = serverPath + temp_md5_name;
             //改名
             tf.Move(temp_new_guid_path, file_io_path, temp_md5_name);
+
+            //是图片就压缩
+            if (Tools.FileHelper.IsImage(source_file_ext))
+            {
+                ImageReSizeAndCompression(temp_md5_server_path, temp_md5_server_path);
+            }
 
             response_entity.msg = 1;
             response_entity.msgbox = "上传成功";
@@ -202,12 +208,19 @@ namespace UniversalAPP.Web
         /// <param name="new_width">新的宽度，不调整则同时和new_height传入0</param>
         /// <param name="new_height">新的宽度，不调整则同时和new_width传入0</param>
         /// <returns></returns>
-        private bool ImageReSizeAndCompression(string souceImagePath, string saveImagePath, int quality, int new_width, int new_height)
+        private bool ImageReSizeAndCompression(string souceImagePath, string saveImagePath, int quality = 90, int new_width = 0, int new_height = 0)
         {
             Tools.FileHelper fileHelper = new Tools.FileHelper(_env.WebRootPath);
             if (!fileHelper.IsExist(souceImagePath, false)) return false;
             using (MagickImage image = new MagickImage(fileHelper.MapPath(souceImagePath)))
             {
+                if (image.Orientation == OrientationType.RightTop)
+                {
+                    //处理手机端图片方向
+                    image.Rotate(90);
+                    image.Orientation = OrientationType.Undefined;
+                }
+                image.Strip();//移除图片信息
                 image.Quality = quality;
                 if (new_width > 0 && new_height > 0) image.Resize(new_width, new_height);
                 image.Write(fileHelper.MapPath(saveImagePath));
