@@ -78,7 +78,7 @@ namespace UniversalAPP.Entity
             get
             {
                 if (string.IsNullOrWhiteSpace(this.Avatar))
-                    return "/images/admin/default_avatar.jpg";
+                    return "/images/default_avatar.jpg";
                 else
                     return this.Avatar;
             }

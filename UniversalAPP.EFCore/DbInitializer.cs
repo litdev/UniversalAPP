@@ -265,14 +265,14 @@ namespace UniversalAPP.EFCore
                 end
                 ";
 
-            //按照某一个Id查询它及它的所有父级成员存储过程
-            context.Database.ExecuteSqlCommand(SQLGetParentCusCategory);
-            //按照某一个Id查询它及它的所有子级成员存储过程
-            context.Database.ExecuteSqlCommand(SQLGetChildCusCategory);
-            //获取所有子类的id，以逗号分割
-            context.Database.ExecuteSqlCommand(SQLFunGetChildCusCategoryStr);
-            //分割字符串，通用函数
-            context.Database.ExecuteSqlCommand(SQLSplitString);
+            ////按照某一个Id查询它及它的所有父级成员存储过程
+            //context.Database.ExecuteSqlCommand(SQLGetParentCusCategory);
+            ////按照某一个Id查询它及它的所有子级成员存储过程
+            //context.Database.ExecuteSqlCommand(SQLGetChildCusCategory);
+            ////获取所有子类的id，以逗号分割
+            //context.Database.ExecuteSqlCommand(SQLFunGetChildCusCategoryStr);
+            ////分割字符串，通用函数
+            //context.Database.ExecuteSqlCommand(SQLSplitString);
 
 
             #endregion
