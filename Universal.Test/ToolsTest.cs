@@ -40,5 +40,14 @@ namespace UniversalAPP.Test
             Assert.AreEqual(1,1);
         }
 
+        [TestMethod]
+        public void SMSTest()
+        {
+
+            var ss = SMSHelper.SendSms("17688700150", "2244");
+
+            Assert.AreEqual(1,1);
+        }
+
     }
 }

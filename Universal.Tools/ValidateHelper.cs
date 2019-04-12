@@ -11,7 +11,7 @@ namespace UniversalAPP.Tools
         //邮件正则表达式
         private static Regex _emailregex = new Regex(@"^[a-z]([a-z0-9]*[-_]?[a-z0-9]+)*@([a-z0-9]*[-_]?[a-z0-9]+)+[\.][a-z]{2,3}([\.][a-z]{2})?$", RegexOptions.IgnoreCase);
         //手机号正则表达式
-        private static Regex _mobileregex = new Regex("^(13|15|18|17|16|19)[0-9]{9}$");
+        private static Regex _mobileregex = new Regex("^(13|14|15|16|17|18|19)[0-9]{9}$");
         //固话号正则表达式
         private static Regex _phoneregex = new Regex(@"^(\d{3,4}-?)?\d{7,8}$");
         //IP正则表达式
@@ -22,6 +22,16 @@ namespace UniversalAPP.Tools
         private static Regex _numericregex = new Regex(@"^[-]?[0-9]+(\.[0-9]+)?$");
         //邮政编码正则表达式
         private static Regex _zipcoderegex = new Regex(@"^\d{6}$");
+
+        /// <summary>
+        /// 隐藏手机号中间四位为*
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string MobileHideCenter(string s)
+        {
+            return Regex.Replace(s, "(\\d{3})\\d{4}(\\d{4})", "$1****$2");
+        }
 
         /// <summary>
         /// 验证是否为指定长度的数字
