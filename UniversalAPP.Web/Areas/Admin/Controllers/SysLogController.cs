@@ -20,11 +20,11 @@ namespace UniversalAPP.Web.Areas.Admin.Controllers
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="loggerFactory"></param>
+        /// <param name="logger"></param>
         /// <param name="appkeys"></param>
-        public SysLogController(ILoggerFactory loggerFactory, IOptionsSnapshot<Web.Models.SiteBasicConfig> appkeys)
+        public SysLogController(ILogger<SysLogController> logger, IOptionsSnapshot<Web.Models.SiteBasicConfig> appkeys)
         {
-            _logger = loggerFactory.CreateLogger<SysLogController>();
+            _logger = logger;
             _config_basic = appkeys.Value;
         }
 

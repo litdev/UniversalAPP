@@ -87,21 +87,6 @@ namespace UniversalAPP.Web
 
             #endregion
 
-            #region MVC
-            
-            //添加MVC及过滤器
-            services.AddMvc(options =>
-            {
-                options.Filters.Add(typeof(CustomExceptionFilterAttribute));
-                options.Filters.Add(typeof(CustomAuthorizationFilterAttribute));
-                //options.Filters.Add(typeof(SimpleResourceFilterAttribute));
-                //options.Filters.Add(typeof(SimpleActionFilterAttribute));
-                //options.Filters.Add(typeof(SimpleResultFilterAttribute));
-            }).SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
-            services.AddSession();
-
-            #endregion
-
             #region Cookie GDPR
 
             services.Configure<CookiePolicyOptions>(options =>
@@ -133,6 +118,21 @@ namespace UniversalAPP.Web
             //    var xmlPath = System.IO.Path.Combine(basePath, "Swagger.xml");
             //    c.IncludeXmlComments(xmlPath);
             //});
+
+            #endregion
+
+            #region MVC
+
+            //添加MVC及过滤器
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(CustomExceptionFilterAttribute));
+                options.Filters.Add(typeof(CustomAuthorizationFilterAttribute));
+                //options.Filters.Add(typeof(SimpleResourceFilterAttribute));
+                //options.Filters.Add(typeof(SimpleActionFilterAttribute));
+                //options.Filters.Add(typeof(SimpleResultFilterAttribute));
+            }).SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
+            services.AddSession();
 
             #endregion
 
@@ -168,31 +168,6 @@ namespace UniversalAPP.Web
             }
 
             #endregion
-            
-            #region MVC相关
-
-            app.UseHttpsRedirection();
-            app.UseAuthentication();
-            //获取IP
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                //为了在nginx上获取用户端真实IP添加此代码
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });
-            //app.UseCookiePolicy();//增加对于GDPR政策的支持
-            app.UseSession();
-            app.UseStaticFiles();
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "areaRoute",
-                    template: "{area:exists}/{controller}/{action=Index}/{id?}");
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
-
-            #endregion
 
             #region 其他公共
 
@@ -223,6 +198,34 @@ namespace UniversalAPP.Web
             //});
 
             #endregion
+
+
+            #region MVC相关
+
+            app.UseHttpsRedirection();
+            app.UseAuthentication();
+            //获取IP
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                //为了在nginx上获取用户端真实IP添加此代码
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+            //app.UseCookiePolicy();//增加对于GDPR政策的支持
+            app.UseSession();
+            app.UseStaticFiles();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "areaRoute",
+                    template: "{area:exists}/{controller}/{action=Index}/{id?}");
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            #endregion
+
+
         }
     }
 }

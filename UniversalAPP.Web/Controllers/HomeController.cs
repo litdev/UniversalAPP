@@ -19,20 +19,20 @@ namespace UniversalAPP.Web.Controllers
         private readonly EFCore.EFDBContext _db;
         private readonly IHostingEnvironment _env;
 
-        public HomeController(IHostingEnvironment environment, ILoggerFactory loggerFactory, IOptionsSnapshot<SiteBasicConfig> appkeys, EFCore.EFDBContext context)
+        public HomeController(IHostingEnvironment environment, ILogger<HomeController> logger, IOptionsSnapshot<SiteBasicConfig> appkeys, EFCore.EFDBContext context)
         {
             _env = environment;
-            _logger = loggerFactory.CreateLogger<HomeController>();
+            _logger = logger;
             _config = appkeys.Value;
             _db = context;
         }
 
         public IActionResult Index()
         {
-            //System.Diagnostics.Trace.WriteLine($"是否是开发环境下:{_env.IsDevelopment()}");
+            _logger.LogDebug($"是否是开发环境下:{_env.IsDevelopment()}");
             return Content(_env.EnvironmentName + "-" + HttpContext.Connection.RemoteIpAddress.ToString());
         }
-        
+
         public static IConfigurationRoot Configuration { get; set; }
 
         public IActionResult SendEmailTest()

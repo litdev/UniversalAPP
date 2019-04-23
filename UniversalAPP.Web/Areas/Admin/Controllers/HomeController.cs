@@ -20,9 +20,9 @@ namespace UniversalAPP.Web.Areas.Admin.Controllers
         private readonly ILogger<HomeController> _logger;
         private Web.Models.SiteBasicConfig _config_basic;
 
-        public HomeController(ILoggerFactory loggerFactory, IOptionsSnapshot<Web.Models.SiteBasicConfig> appkeys)
+        public HomeController(ILogger<HomeController> logger, IOptionsSnapshot<Web.Models.SiteBasicConfig> appkeys)
         {
-            _logger = loggerFactory.CreateLogger<HomeController>();
+            _logger = logger;
             _config_basic = appkeys.Value;
         }
 

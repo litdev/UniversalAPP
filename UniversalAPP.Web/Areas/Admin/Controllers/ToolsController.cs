@@ -6,12 +6,29 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ImageMagick;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
 namespace UniversalAPP.Web.Areas.Admin.Controllers
 {
     [Area("Admin"), Authorize]
     public class ToolsController : BaseAdminController
     {
+        private readonly ILogger<ToolsController> _logger;
+        private Web.Models.SiteBasicConfig _config_basic;
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="appkeys"></param>
+        public ToolsController(ILogger<ToolsController> logger, IOptionsSnapshot<Web.Models.SiteBasicConfig> appkeys)
+        {
+            _logger = logger;
+            _config_basic = appkeys.Value;
+        }
+
+
         /// <summary>
         /// 设置分页大小Cookie
         /// </summary>
