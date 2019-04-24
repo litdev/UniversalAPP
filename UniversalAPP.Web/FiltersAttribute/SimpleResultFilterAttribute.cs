@@ -6,21 +6,21 @@ namespace UniversalAPP.Web
 {
     public class SimpleResultFilterAttribute : Attribute, IResultFilter
     {
-        private readonly ILogger<SimpleResultFilterAttribute> logger;
+        private readonly ILogger<SimpleResultFilterAttribute> _logger;
 
-        public SimpleResultFilterAttribute(ILoggerFactory loggerFactory)
+        public SimpleResultFilterAttribute(ILogger<SimpleResultFilterAttribute> logger)
         {
-            logger = loggerFactory.CreateLogger<SimpleResultFilterAttribute>();
+            _logger = logger;
         }
 
         public void OnResultExecuted(ResultExecutedContext context)
         {
-            logger.LogInformation("ResultFilter Executd!");
+            _logger.LogInformation("ResultFilter Executd!");
         }
 
         public void OnResultExecuting(ResultExecutingContext context)
         {
-            logger.LogInformation("ResultFilter Executing!");
+            _logger.LogInformation("ResultFilter Executing!");
         }
     }
 

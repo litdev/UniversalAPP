@@ -6,21 +6,21 @@ namespace UniversalAPP.Web
 {
     public class SimpleActionFilterAttribute : Attribute, IActionFilter
     {
-        private readonly ILogger<SimpleActionFilterAttribute> logger;
+        private readonly ILogger<SimpleActionFilterAttribute> _logger;
 
-        public SimpleActionFilterAttribute(ILoggerFactory loggerFactory)
+        public SimpleActionFilterAttribute(ILogger<SimpleActionFilterAttribute> logger)
         {
-            logger = loggerFactory.CreateLogger<SimpleActionFilterAttribute>();
+            _logger = logger;
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
-            logger.LogInformation("ActionFilter Executed!");
+            _logger.LogInformation("ActionFilter Executed!");
         }
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            logger.LogInformation("ActionFilter Executing!");
+            _logger.LogInformation("ActionFilter Executing!");
         }
     }
 

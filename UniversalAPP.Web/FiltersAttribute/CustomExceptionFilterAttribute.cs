@@ -22,18 +22,18 @@ namespace UniversalAPP.Web
 
 
 
-        public CustomExceptionFilterAttribute(IHostingEnvironment hostingEnvironment, IModelMetadataProvider modelMetadataProvider, ILoggerFactory loggerFactory, IOptionsSnapshot<Models.SiteBasicConfig> appkeys, EFCore.EFDBContext db)
+        public CustomExceptionFilterAttribute(IHostingEnvironment hostingEnvironment, IModelMetadataProvider modelMetadataProvider, ILogger<CustomExceptionFilterAttribute> logger, IOptionsSnapshot<Models.SiteBasicConfig> appkeys, EFCore.EFDBContext db)
         {
             _hostingEnvironment = hostingEnvironment;
             _modelMetadataProvider = modelMetadataProvider;
-            _logger = loggerFactory.CreateLogger<CustomExceptionFilterAttribute>();
+            _logger = logger;
             _config_basic = appkeys.Value;
             _db_context = db;
         }
 
         public void OnException(ExceptionContext context)
         {
-            _logger.LogError("Exception Execute! Message:" + context.Exception.Message);
+            _logger.LogError(context.Exception, "发生异常");
 
             //开发环境不对异常做处理，抛出最详细的异常信息
             if (_hostingEnvironment.IsDevelopment()) return;

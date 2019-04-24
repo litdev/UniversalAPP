@@ -23,10 +23,10 @@ namespace UniversalAPP.Web
         private readonly Models.SiteBasicConfig _config;
         private readonly IModelMetadataProvider _modelMetadataProvider;
 
-        public CustomAuthorizationFilterAttribute(IHostingEnvironment hostingEnvironment, IModelMetadataProvider modelMetadataProvider, ILoggerFactory loggerFactory, EFCore.EFDBContext db, IOptionsSnapshot<Models.SiteBasicConfig> siteConfig)
+        public CustomAuthorizationFilterAttribute(IHostingEnvironment hostingEnvironment, IModelMetadataProvider modelMetadataProvider, ILogger<CustomAuthorizationFilterAttribute> logger, EFCore.EFDBContext db, IOptionsSnapshot<Models.SiteBasicConfig> siteConfig)
         {
             _hostingEnvironment = hostingEnvironment;
-            _logger = loggerFactory.CreateLogger<CustomAuthorizationFilterAttribute>();
+            _logger = logger;
             _config = siteConfig.Value;
             _db_context = db;
             _modelMetadataProvider = modelMetadataProvider;
