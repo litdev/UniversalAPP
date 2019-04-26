@@ -23,7 +23,6 @@ namespace UniversalAPP.Web.API
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="loggerFactory"></param>
         /// <param name="appkeys"></param>
         public TestController(IOptionsSnapshot<Web.Models.SiteBasicConfig> appkeys)
         {

@@ -78,7 +78,7 @@ namespace UniversalAPP.Web
         /// <summary>
         /// 提示信息视图
         /// </summary>
-        /// <param name="message">提示信息</param>
+        /// <param name="model">提示信息</param>
         /// <returns></returns>
         protected ViewResult PromptView(PromptModel model)
         {
@@ -155,6 +155,7 @@ namespace UniversalAPP.Web
 
         /// <summary>
         /// 排序Cookie Key
+        /// </summary>
         /// <returns></returns>
         protected string CookieKey_OrderBy()
         {
