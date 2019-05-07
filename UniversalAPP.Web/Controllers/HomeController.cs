@@ -33,7 +33,21 @@ namespace UniversalAPP.Web.Controllers
             return Content(_env.EnvironmentName + "-" + HttpContext.Connection.RemoteIpAddress.ToString());
         }
 
-        public static IConfigurationRoot Configuration { get; set; }
+        public IActionResult CacheTest()
+        {
+            var cacheKey = "abc";
+            CacheHelper cacheHelper = new CacheHelper();
+            if (cacheHelper.Exists(cacheKey))
+            {
+                return Content("已有缓存:" + cacheHelper.Get<string>(cacheKey));
+            }
+            else
+            {
+                cacheHelper.Set(cacheKey, DateTime.Now.ToString(), 1, 2);
+                return Content("新设缓存:" + cacheHelper.Get<string>(cacheKey));
+            }
+        }
+
 
         public IActionResult SendEmailTest()
         {

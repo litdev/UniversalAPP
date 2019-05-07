@@ -156,6 +156,9 @@ namespace UniversalAPP.Web
 
             #region MVC
 
+            //添加缓存支持
+            services.AddMemoryCache();
+
             //添加MVC及过滤器
             services.AddMvc(options =>
             {
