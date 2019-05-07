@@ -8,15 +8,15 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 
-namespace UniversalAPP.Web.API
+namespace UniversalAPP.Web.API.V2
 {
     /// <summary>
-    /// 未指定版本的接口
+    /// V2版本演示
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
-    [ApiVersionNeutral()]
-    public class PublicController : BaseAPIController
+    [ApiVersion("2.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    public class valuesController : BaseAPIController
     {
 
         private Models.SiteBasicConfig _config_basic;
@@ -25,23 +25,23 @@ namespace UniversalAPP.Web.API
         /// 构造函数
         /// </summary>
         /// <param name="appkeys"></param>
-        public PublicController(IOptionsSnapshot<Web.Models.SiteBasicConfig> appkeys)
+        public valuesController(IOptionsSnapshot<Web.Models.SiteBasicConfig> appkeys)
         {
             _config_basic = appkeys.Value;
 
         }
 
         /// <summary>
-        /// Demo
+        /// V2版本测试
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         [Route("doing")]
         public UnifiedResultEntity<string> doing()
         {
-            return ResultBasicString(1, "OK", "接口已通");
+            System.Diagnostics.Trace.Write("Hass");
+            return ResultBasicString(1, "OK", "V2版本接口已通");
         }
-
 
     }
 }

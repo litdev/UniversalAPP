@@ -13,6 +13,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Hangfire;
 using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Versioning;
 
 namespace UniversalAPP.Web
 {
@@ -21,20 +24,17 @@ namespace UniversalAPP.Web
     /// </summary>
     public class Startup
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="configuration"></param>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public IConfiguration Configuration { get; }
 
+        /// <summary>
+        /// Api版本信息
+        /// </summary>
+        private IApiVersionDescriptionProvider provider;
 
 
         /// <summary>
@@ -107,17 +107,50 @@ namespace UniversalAPP.Web
             #endregion
 
             #region Swagger API文档生成
-            ////注册Swagger生成器，定义一个和多个Swagger 文档
-            ////属性>生成>XML文档文件 bin\debug\netcoreapp2.2\Swagger.xml
-            ////属性>生成>禁止显示警告 1701;1702
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new Info { Title = "UniversalAPP Web API Document", Version = "v1" });
-            //    // 为 Swagger JSON and UI设置xml文档注释路径
-            //    var basePath = System.IO.Path.GetDirectoryName(typeof(Program).Assembly.Location);//获取应用程序所在目录（绝对，不受工作目录影响，建议采用此方法获取路径）
-            //    var xmlPath = System.IO.Path.Combine(basePath, "Swagger.xml");
-            //    c.IncludeXmlComments(xmlPath);
-            //});
+
+            //添加版本控制
+            services.AddApiVersioning(option =>
+            {
+                // 可选，为true时API返回支持的版本信息
+                option.ReportApiVersions = true;
+                // 不提供版本时，默认为1.0
+                //option.AssumeDefaultVersionWhenUnspecified = false;
+                // 请求中未指定版本时默认为1.0
+                option.DefaultApiVersion = new ApiVersion(1, 0);
+                //请求版本号放到Header中，注释掉则在url中指定
+                //option.ApiVersionReader = new HeaderApiVersionReader("api-version");
+                //版本号放到URL中
+                option.ApiVersionReader = new UrlSegmentApiVersionReader();
+            }).AddVersionedApiExplorer(option =>
+            {
+                option.GroupNameFormat = "'v'V";
+                //option.AssumeDefaultVersionWhenUnspecified = true;
+            });
+
+            this.provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
+
+
+            //注册Swagger生成器，定义一个和多个Swagger 文档
+            //属性>生成>XML文档文件 bin\debug\netcoreapp2.2\Swagger.xml
+            //属性>生成>禁止显示警告 1701;1702
+            services.AddSwaggerGen(c =>
+            {
+                // 多版本控制
+                foreach (var item in provider.ApiVersionDescriptions)
+                {
+                    // 添加文档信息
+                    c.SwaggerDoc(item.GroupName, new Info
+                    {
+                        Title = "接口文档",
+                        Version = item.ApiVersion.ToString(),
+                        Description = "站点API文档"
+                    });
+                }
+                // 为 Swagger JSON and UI设置xml文档注释路径
+                var basePath = System.IO.Path.GetDirectoryName(typeof(Program).Assembly.Location);//获取应用程序所在目录（绝对，不受工作目录影响，建议采用此方法获取路径）
+                var xmlPath = System.IO.Path.Combine(basePath, "Swagger.xml");
+                c.IncludeXmlComments(xmlPath, true);
+            });
 
             #endregion
 
@@ -189,13 +222,17 @@ namespace UniversalAPP.Web
 
             #region Swagger API文档生成
 
-            ////启用中间件服务生成Swagger作为JSON终结点
-            //app.UseSwagger();
-            ////启用中间件服务对swagger-ui，指定Swagger JSON终结点
-            //app.UseSwaggerUI(c =>
-            //{
-            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "UniversalAPP Web API Document");
-            //});
+            //启用中间件服务生成Swagger作为JSON终结点
+            app.UseSwagger();
+            //启用中间件服务对swagger-ui，指定Swagger JSON终结点
+            app.UseSwaggerUI(c =>
+            {
+                foreach (var item in provider.ApiVersionDescriptions)
+                {
+                    //c.SwaggerEndpoint("/swagger/v1/swagger.json", "UniversalAPP Web API Document"); 单版本
+                    c.SwaggerEndpoint($"/swagger/{item.GroupName}/swagger.json", "API V" + item.ApiVersion);
+                }
+            });
 
             #endregion
 
