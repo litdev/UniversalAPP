@@ -70,6 +70,17 @@ namespace UniversalAPP.Web.API.V1
         }
 
         /// <summary>
+        /// 隐藏API，增加这个属性[ApiExplorerSettings(IgnoreApi = true)]
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("hidden")]
+        [ApiExplorerSettings(IgnoreApi =true)]
+        public UnifiedResultEntity<string> HiddenAPI()
+        {
+            return ResultBasicString(1, "Hidden", "此接口已隐藏");
+        }
+
+        /// <summary>
         /// 文件上传
         /// </summary>
         /// <param name="files">客户端上传文件的KEY必须为“files”，多个文件各个名字都写“files”，不然取不到文件</param>
