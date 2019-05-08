@@ -210,6 +210,9 @@ namespace UniversalAPP.Web
             //图片不存在时返回默认图片
             app.UseDefaultImage(defaultImagePath: Configuration.GetSection("defaultImagePath").Value);
 
+            //处理404请求
+            app.UseRequestNotFound();
+
             System.Diagnostics.Trace.Listeners.Clear();
             System.Diagnostics.Trace.Listeners.Add(new CustomTraceListener());
 
