@@ -72,7 +72,6 @@ namespace UniversalAPP.Web
             {
                 AddTime = DateTime.Now,
                 Message = ex.Message,
-                Source = ex.Source,
                 StackTrace = ex.StackTrace
             };
             new BLL.DynamicBLL<Entity.SysLogException>(_db_context).Add(entity);
