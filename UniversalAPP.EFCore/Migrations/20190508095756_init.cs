@@ -62,7 +62,6 @@ namespace UniversalAPP.EFCore.Migrations
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Message = table.Column<string>(maxLength: 255, nullable: false),
-                    Source = table.Column<string>(maxLength: 50, nullable: true),
                     StackTrace = table.Column<string>(nullable: true),
                     AddTime = table.Column<DateTime>(nullable: false)
                 },

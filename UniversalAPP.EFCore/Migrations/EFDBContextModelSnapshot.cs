@@ -179,9 +179,6 @@ namespace UniversalAPP.EFCore.Migrations
                         .IsRequired()
                         .HasMaxLength(255);
 
-                    b.Property<string>("Source")
-                        .HasMaxLength(50);
-
                     b.Property<string>("StackTrace");
 
                     b.HasKey("ID");

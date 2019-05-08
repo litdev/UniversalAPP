@@ -22,11 +22,6 @@ namespace UniversalAPP.Entity
         [Required, MaxLength(255)]
         public string Message { get; set; }
 
-        /// <summary>
-        /// 错误位置
-        /// </summary>
-        [MaxLength(50)]
-        public string Source { get; set; }
 
         /// <summary>
         /// 堆栈信息

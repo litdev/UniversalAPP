@@ -9,6 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NLog.Web;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace UniversalAPP.Web
 {
@@ -19,33 +22,25 @@ namespace UniversalAPP.Web
             var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 
             var host = BuildWebHost(args);
+
             //数据库初始化
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                try
+                var context = services.GetRequiredService<EFCore.EFDBContext>();
+                //数据库如果不存在则进行初始化
+                if (!(context.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator).Exists()) EFCore.DbInitializer.Initialize(context);
+                if (context.Database.GetPendingMigrations().ToArray().Length > 0)
                 {
-                    var context = services.GetRequiredService<EFCore.EFDBContext>();
-                    EFCore.DbInitializer.Initialize(context);
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex, "数据库初始化失败");
+                    var msg = "数据库有迁移，请先迁移完再启动站点";
+                    logger.Error(msg);
+                    NLog.LogManager.Shutdown();
+                    host.Dispose();
+                    throw new Exception(msg);
                 }
             }
 
-            try
-            {
-                host.Run();
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex, "程序启动失败");
-            }
-            finally
-            {
-                NLog.LogManager.Shutdown();
-            }
+            host.Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>

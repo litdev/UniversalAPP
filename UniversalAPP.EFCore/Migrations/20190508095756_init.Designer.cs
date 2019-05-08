@@ -10,7 +10,7 @@ using UniversalAPP.EFCore;
 namespace UniversalAPP.EFCore.Migrations
 {
     [DbContext(typeof(EFDBContext))]
-    [Migration("20190328110735_init")]
+    [Migration("20190508095756_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -180,9 +180,6 @@ namespace UniversalAPP.EFCore.Migrations
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasMaxLength(255);
-
-                    b.Property<string>("Source")
-                        .HasMaxLength(50);
 
                     b.Property<string>("StackTrace");
 
