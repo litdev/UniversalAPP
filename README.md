@@ -3,14 +3,14 @@
 2. 往后当有新的迁移(`add-migration xxx`)时，如果不进行手动迁移数据库(`update-database`)则访问网页会收到`HTTP Error 502.5 - ANCM Out-Of-Process Startup Failure`这个错误，如果项目本地直接连接线上服务器，则在`程序包管理器控制台`(默认项目选择：UniversalAPP.EFCore)进行`update-database`就行了。否则将`UniversalAPP.EFCoreMigrator`项目发布后放到服务器cmd中运行`dotnet UniversalAPP.EFCoreMigrator.dll`按照提示进行迁移(数据库连接字符串写死了，注意更改)。
 3. 附程序包管理器控制台中的迁移命令
 
-命令|描述
+命令|描述|-
 -:|:-:|:-:
-Add-Migration xxx|创建迁移
-Update-Database|更新数据库
-Script-Migration|生成SQL迁移脚本
-Script-Migration -From xxx -To xxx|生成指定版本的SQL迁移脚本(xxx为Migrations文件中的cs文件名)
-Remove-Migration|删除迁移
-
+Add-Migration xxx|创建迁移|
+Update-Database|更新数据库|
+Script-Migration|生成SQL迁移脚本|
+Script-Migration -From xxx -To xxx|生成指定版本的SQL迁移脚本(xxx为Migrations文件中的cs文件名)|
+Remove-Migration|删除迁移|
+ 
 #### 项目迁移到NetCore中遇到的一些差异
 
 1. JQuery的版本是v3.2.1，这个版本取消了`size()`这个函数，改用`length`   
