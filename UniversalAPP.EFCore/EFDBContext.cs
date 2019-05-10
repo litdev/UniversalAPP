@@ -23,10 +23,17 @@ namespace UniversalAPP.EFCore
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //TODO SQL日志监控，生产环境要禁用
-            var loggerFactory = new LoggerFactory();
-            loggerFactory.AddProvider(new EFLoggerProvider());
-            optionsBuilder.UseLoggerFactory(loggerFactory);
+            var env_name = System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            if (env_name != null)
+            {
+                if (env_name.Equals("Development"))
+                {
+                    //开发环境下才启用日志监控
+                    var loggerFactory = new LoggerFactory();
+                    loggerFactory.AddProvider(new EFLoggerProvider());
+                    optionsBuilder.UseLoggerFactory(loggerFactory);
+                }
+            }
 
             if (!optionsBuilder.IsConfigured)
             {

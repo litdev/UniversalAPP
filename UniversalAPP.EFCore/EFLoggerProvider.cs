@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace UniversalAPP.EFCore
 {
@@ -29,10 +27,11 @@ namespace UniversalAPP.EFCore
             {
                 //Console.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
                 var logContent = formatter(state, exception);
+                System.Diagnostics.Trace.WriteLine(logContent);
                 //拿到日志内容想怎么玩就怎么玩吧
-                Console.WriteLine();
-                Console.WriteLine(logContent);
-                Console.WriteLine();
+                //Console.WriteLine();
+                //Console.WriteLine(logContent);
+                //Console.WriteLine();
             }
         }
     }

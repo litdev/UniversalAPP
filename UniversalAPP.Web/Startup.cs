@@ -16,6 +16,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace UniversalAPP.Web
 {
@@ -200,15 +201,16 @@ namespace UniversalAPP.Web
                 //    });
 
                 //app.UseExceptionHandler("/Home/Error");
+
+                //图片不存在时返回默认图片
+                app.UseDefaultImage(defaultImagePath: Configuration.GetSection("defaultImagePath").Value);
+
                 app.UseHsts();
             }
 
             #endregion
 
             #region 其他公共
-
-            //图片不存在时返回默认图片
-            app.UseDefaultImage(defaultImagePath: Configuration.GetSection("defaultImagePath").Value);
 
             //处理404请求
             app.UseRequestNotFound();
@@ -241,11 +243,10 @@ namespace UniversalAPP.Web
             });
 
             #endregion
-
-
+            
             #region MVC相关
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseAuthentication();
             //获取IP
             app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -255,7 +256,17 @@ namespace UniversalAPP.Web
             });
             //app.UseCookiePolicy();//增加对于GDPR政策的支持
             app.UseSession();
-            app.UseStaticFiles();
+            //可以下载未知文件
+            var unknownFileOption = new StaticFileOptions
+            {
+                ContentTypeProvider = new FileExtensionContentTypeProvider(new Dictionary<string, string>
+                {
+                    { ".apk","application/vnd.android.package-archive"},
+                    {"rar","application/octet-stream" }
+                })
+            };
+            app.UseStaticFiles(unknownFileOption);
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
