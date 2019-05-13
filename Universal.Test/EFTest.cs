@@ -10,7 +10,7 @@ namespace UniversalAPP.Test
         [TestMethod]
         public async Task Test()
         {
-            string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=UniversalCoreAPPDB;Trusted_Connection=True;MultipleActiveResultSets=true;";
+            string connectionString = "server=127.0.01;user id=root;password=123456;database=UniversalAPP;charset=utf8;TreatTinyAsBoolean=true;sslMode=None";
             var context = new EFCore.EFDBContext(connectionString);
 
             //BLL.DynamicBLL<Entity.SysUser> bll = new BLL.DynamicBLL<Entity.SysUser>(context);
@@ -40,9 +40,12 @@ namespace UniversalAPP.Test
             //var sss = await bll.GetList(false, 1);
             var is_post = false;
             //BLL.DynamicBLL<Entity.AppVersion> bll = new BLL.DynamicBLL<Entity.AppVersion>(context);
-            BLL.BLLSysRoute bll = new BLL.BLLSysRoute(context);
+            //BLL.BLLSysRoute bll = new BLL.BLLSysRoute(context);
             //var ss = bll.CheckAdminPower(2, false, "appversion/editios", false);
-            var sss = bll.GetRoleRouteList(2);
+            //var sss = bll.GetRoleRouteList(2);
+
+            BLL.BLLCusCategory bll = new BLL.BLLCusCategory(context);
+            var ss = bll.GetList(false,1);
 
             Assert.AreEqual(1, 1);
         }

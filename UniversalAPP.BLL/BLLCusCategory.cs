@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.DynamicLinq;
 using System.Linq.Dynamic.Core;
 using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 
 namespace UniversalAPP.BLL
 {
@@ -94,13 +95,10 @@ namespace UniversalAPP.BLL
         /// <param name="up">查找父级，否则为查找子级</param>
         /// <param name="id">当前分类ID</param>
         /// <returns></returns>
-        public Task<List<Entity.CusCategory>> GetList(bool up, int id)
+        public List<Entity.CusCategory> GetList(bool up, int id)
         {
-            SqlParameter[] param = { new SqlParameter("@Id", id) };
-            string proc_name = "dbo.sp_GetParentCusCategory @Id";
-            if (!up)
-                proc_name = "dbo.sp_GetChildCusCategory @Id";
-            return db.CusCategorys.FromSql(proc_name, param).ToListAsync();
+            var exc_sql = up ? "SELECT* FROM CusCategorys WHERE FIND_IN_SET(ID, fn_queryParentCusCategory(" + id.ToString() + "));" : "SELECT* FROM CusCategorys WHERE FIND_IN_SET(ID, fn_queryChildCusCategory(" + id.ToString() + "));";
+            return db.Database.SqlQuery<Entity.CusCategory>(exc_sql);
         }
 
         /// <summary>
@@ -110,10 +108,10 @@ namespace UniversalAPP.BLL
         /// <returns></returns>
         public string GetChildIDStr(int id)
         {
-            string Sql = $"select dbo.fn_GetChildCusCategoryStr({id}) as idstr";
+            string Sql = $"select fn_queryChildCusCategory({id}) as idstr";
 
             var str = db.Database.SqlQuery<CusCategoryChildIDStr>(Sql);
-            return str.FirstOrDefault()?.idstr;
+            return str.FirstOrDefault()?.idstr.Replace("$,", "");
             //string result = string.Empty;
             //using (var connection = db.Database.GetDbConnection())
             //{

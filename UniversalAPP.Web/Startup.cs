@@ -60,7 +60,7 @@ namespace UniversalAPP.Web
             #region 数据库
 
             services.AddDbContext<EFCore.EFDBContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), p => p.UseRowNumberForPaging()));
+                options.UseMySql(Configuration.GetConnectionString("MySqlConnection")));
 
             #endregion
 
@@ -102,8 +102,7 @@ namespace UniversalAPP.Web
             #region Hangfire计划任务
 
             ////Hangfire计划任务
-            //services.AddHangfire(p => p.UseSqlServerStorage(Configuration.GetConnectionString("HangfireConnection")));
-
+            //services.AddHangfire(x => x.UseStorage(new Hangfire.MySql.Core.MySqlStorage(Configuration.GetConnectionString("HangfireMySqlConnection"), new Hangfire.MySql.Core.MySqlStorageOptions() { TablePrefix = "Custom" })));
 
             #endregion
 
@@ -243,7 +242,7 @@ namespace UniversalAPP.Web
             });
 
             #endregion
-            
+
             #region MVC相关
 
             //app.UseHttpsRedirection();
@@ -256,16 +255,17 @@ namespace UniversalAPP.Web
             });
             //app.UseCookiePolicy();//增加对于GDPR政策的支持
             app.UseSession();
-            //可以下载未知文件
-            var unknownFileOption = new StaticFileOptions
-            {
-                ContentTypeProvider = new FileExtensionContentTypeProvider(new Dictionary<string, string>
-                {
-                    { ".apk","application/vnd.android.package-archive"},
-                    {"rar","application/octet-stream" }
-                })
-            };
-            app.UseStaticFiles(unknownFileOption);
+            //拓展MIME支持
+            var unknownFileOption = new FileExtensionContentTypeProvider();
+            unknownFileOption.Mappings[".myapp"] = "application/x-msdownload";
+            unknownFileOption.Mappings[".htm3"] = "text/html";
+            unknownFileOption.Mappings[".image"] = "image/png";
+            unknownFileOption.Mappings[".rtf"] = "application/x-msdownload";
+            unknownFileOption.Mappings[".apk"] = "application/vnd.android.package-archive";
+            unknownFileOption.Mappings[".rar"] = "application/octet-stream";
+            ////移除mp4支持
+            //unknownFileOption.Mappings.Remove(".mp4");
+            app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = unknownFileOption });
 
             app.UseMvc(routes =>
             {

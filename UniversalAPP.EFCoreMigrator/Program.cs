@@ -17,7 +17,7 @@ namespace UniversalAPP.EFCoreMigrator
             Console.WriteLine("Entity Framework Core 数据库迁移开始 !");
             Console.WriteLine("获取待迁移项...");
 
-            string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=UniversalCoreAPPDB;Trusted_Connection=True;MultipleActiveResultSets=true;";
+            string connectionString = "server=127.0.01;user id=root;password=123456;database=UniversalAPP;charset=utf8;TreatTinyAsBoolean=true;sslMode=None";
             using (var db = new EFDBContext(connectionString))
             {
                 //获取所有迁移

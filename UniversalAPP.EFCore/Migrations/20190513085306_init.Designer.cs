@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UniversalAPP.EFCore;
@@ -10,7 +9,7 @@ using UniversalAPP.EFCore;
 namespace UniversalAPP.EFCore.Migrations
 {
     [DbContext(typeof(EFDBContext))]
-    [Migration("20190508095756_init")]
+    [Migration("20190513085306_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,14 +17,12 @@ namespace UniversalAPP.EFCore.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("UniversalAPP.Entity.AppVersion", b =>
                 {
                     b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<byte>("APPType");
 
@@ -64,8 +61,7 @@ namespace UniversalAPP.EFCore.Migrations
             modelBuilder.Entity("UniversalAPP.Entity.CusCategory", b =>
                 {
                     b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("AddTime");
 
@@ -91,8 +87,7 @@ namespace UniversalAPP.EFCore.Migrations
             modelBuilder.Entity("UniversalAPP.Entity.Demo", b =>
                 {
                     b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("AddTime");
 
@@ -127,8 +122,7 @@ namespace UniversalAPP.EFCore.Migrations
             modelBuilder.Entity("UniversalAPP.Entity.DemoAlbum", b =>
                 {
                     b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("DemoID");
 
@@ -147,8 +141,7 @@ namespace UniversalAPP.EFCore.Migrations
             modelBuilder.Entity("UniversalAPP.Entity.DemoDept", b =>
                 {
                     b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("DemoID");
 
@@ -172,8 +165,7 @@ namespace UniversalAPP.EFCore.Migrations
             modelBuilder.Entity("UniversalAPP.Entity.SysLogException", b =>
                 {
                     b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("AddTime");
 
@@ -191,8 +183,7 @@ namespace UniversalAPP.EFCore.Migrations
             modelBuilder.Entity("UniversalAPP.Entity.SysLogMethod", b =>
                 {
                     b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("AddTime");
 
@@ -214,8 +205,7 @@ namespace UniversalAPP.EFCore.Migrations
             modelBuilder.Entity("UniversalAPP.Entity.SysRole", b =>
                 {
                     b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("AddTime");
 
@@ -237,8 +227,7 @@ namespace UniversalAPP.EFCore.Migrations
             modelBuilder.Entity("UniversalAPP.Entity.SysRoleRoute", b =>
                 {
                     b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("SysRoleID");
 
@@ -256,8 +245,7 @@ namespace UniversalAPP.EFCore.Migrations
             modelBuilder.Entity("UniversalAPP.Entity.SysRoute", b =>
                 {
                     b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("AddTime");
 
@@ -280,8 +268,7 @@ namespace UniversalAPP.EFCore.Migrations
             modelBuilder.Entity("UniversalAPP.Entity.SysUser", b =>
                 {
                     b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Avatar");
 

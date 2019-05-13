@@ -13,7 +13,7 @@ namespace UniversalAPP.EFCore.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Platforms = table.Column<byte>(nullable: false),
                     APPType = table.Column<byte>(nullable: false),
                     MD5 = table.Column<string>(maxLength: 100, nullable: true),
@@ -36,7 +36,7 @@ namespace UniversalAPP.EFCore.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(maxLength: 30, nullable: false),
                     PID = table.Column<int>(nullable: true),
                     Depth = table.Column<int>(nullable: false),
@@ -60,7 +60,7 @@ namespace UniversalAPP.EFCore.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Message = table.Column<string>(maxLength: 255, nullable: false),
                     StackTrace = table.Column<string>(nullable: true),
                     AddTime = table.Column<DateTime>(nullable: false)
@@ -75,7 +75,7 @@ namespace UniversalAPP.EFCore.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     RoleName = table.Column<string>(maxLength: 30, nullable: false),
                     IsAdmin = table.Column<bool>(nullable: false),
                     RoleDesc = table.Column<string>(maxLength: 255, nullable: false),
@@ -91,7 +91,7 @@ namespace UniversalAPP.EFCore.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Tag = table.Column<string>(maxLength: 30, nullable: true),
                     IsPost = table.Column<bool>(nullable: false),
                     Route = table.Column<string>(maxLength: 30, nullable: true),
@@ -108,7 +108,7 @@ namespace UniversalAPP.EFCore.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     UserName = table.Column<string>(maxLength: 20, nullable: false),
                     NickName = table.Column<string>(maxLength: 30, nullable: false),
                     Gender = table.Column<byte>(nullable: false),
@@ -135,7 +135,7 @@ namespace UniversalAPP.EFCore.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     SysRoleID = table.Column<int>(nullable: false),
                     SysRouteID = table.Column<int>(nullable: false)
                 },
@@ -161,7 +161,7 @@ namespace UniversalAPP.EFCore.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     AddTime = table.Column<DateTime>(nullable: false),
                     AddUserID = table.Column<int>(nullable: true),
                     LastUpdateTime = table.Column<DateTime>(nullable: false),
@@ -194,7 +194,7 @@ namespace UniversalAPP.EFCore.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     SysUserID = table.Column<int>(nullable: false),
                     Type = table.Column<byte>(nullable: false),
                     Detail = table.Column<string>(maxLength: 500, nullable: false),
@@ -216,7 +216,7 @@ namespace UniversalAPP.EFCore.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     DemoID = table.Column<int>(nullable: false),
                     ImgUrl = table.Column<string>(nullable: false),
                     Weight = table.Column<int>(nullable: false)
@@ -237,7 +237,7 @@ namespace UniversalAPP.EFCore.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     DemoID = table.Column<int>(nullable: false),
                     Title = table.Column<string>(maxLength: 255, nullable: false),
                     ImgUrl = table.Column<string>(maxLength: 255, nullable: false),

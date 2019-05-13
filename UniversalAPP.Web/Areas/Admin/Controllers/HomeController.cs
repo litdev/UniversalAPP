@@ -98,7 +98,7 @@ namespace UniversalAPP.Web.Areas.Admin.Controllers
                 expires_time.ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7);
             }
             await AuthenticationHttpContextExtensions.SignInAsync(HttpContext, new ClaimsPrincipal(identity), expires_time);
-            await bll.ExecuteSqlCommandAsync($"Update SysUser set LastLoginTime=getdate() where ID ={entity_user.ID}");
+            await bll.ExecuteSqlCommandAsync($"Update SysUser set LastLoginTime=now() where ID ={entity_user.ID}");
             AddMethodLog(_config_basic.LogMethodInDB, Entity.SysLogMethodType.Login, "用户登录", entity_user.ID);
             return RedirectToAction("Index");
         }

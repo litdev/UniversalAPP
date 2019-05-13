@@ -101,170 +101,54 @@ namespace UniversalAPP.EFCore
 
 
             #region 初始化存储过程
-            //按照某一个Id查询它及它的所有子级成员存储过程
+
+            //按照某一个Id查询它及它的所有子级成员函数
             string SQLGetChildCusCategory = @"
-                    CREATE PROCEDURE [dbo].[sp_GetChildCusCategory] (@Id int)
-                    AS
+                    DROP FUNCTION IF EXISTS fn_queryChildCusCategory;
+                    CREATE FUNCTION fn_queryChildCusCategory(rootId INT)
+                    RETURNS VARCHAR(4000)
                     BEGIN
-                    WITH Record AS(
-                        SELECT
-                        Id,
-                        Title,
-                        PID,
-                        Depth,
-                        Status,
-                        Weight,
-                        AddTime
-                    FROM
-                        CusCategorys(NOLOCK)
-                        WHERE Id=@Id
-                        UNION ALL
-                            SELECT
-                        a.Id Id,
-                        a.Title Title,
-                        a.PID PID,
-                        a.Depth Depth,
-                        a.Status Status,
-                        a.Weight Weight,
-                        a.AddTime AddTime
-                    FROM
-                        CusCategorys(NOLOCK) a JOIN Record b
-                        ON a.PID=b.Id
-                    )
- 
-                    SELECT
-                        Id,
-                        Title,
-                        PID,
-                        Depth,
-                        Status,
-                        Weight,
-                        AddTime
-                    FROM
-                        Record
-                        WHERE Status=1
-                        ORDER BY Weight DESC     
-                    END";
+                    DECLARE sTemp VARCHAR(4000);
+                    DECLARE sTempChd VARCHAR(4000);
+                    
+                    SET sTemp='$';
+                    SET sTempChd = CAST(rootId AS CHAR);
+                    
+                    WHILE sTempChd IS NOT NULL DO
+                    SET sTemp= CONCAT(sTemp,',',sTempChd);
+                    SELECT GROUP_CONCAT(ID) INTO sTempChd FROM CusCategorys WHERE FIND_IN_SET(PID,sTempChd)>0;
+                    END WHILE;
+                    RETURN sTemp;    
+                    END;";
+            //使用方法 SELECT fn_queryChildCusCategory(1);  SELECT* FROM CusCategorys WHERE FIND_IN_SET(ID, fn_queryChildCusCategory(1));
 
-            //按照某一个Id查询它及它的所有父级成员存储过程
+            //按照某一个Id查询它及它的所有父级成员函数
             string SQLGetParentCusCategory = @"
-                        CREATE PROCEDURE [dbo].[sp_GetParentCusCategory] (@Id int)
-                        AS
-                        BEGIN
-                        WITH Record AS(
-                            SELECT
-                            Id,
-                            Title,
-                            PId,
-                            Depth,
-                            Status,
-                            Weight,
-                            AddTime
-                        FROM
-                            CusCategorys(NOLOCK)
-                            WHERE Id=@Id
-                            UNION ALL
-                            SELECT
-                            a.Id Id,
-                            a.Title Title,
-                            a.PId PId,
-                            a.Depth Depth,
-                            a.Status Status,
-                            a.Weight Weight,
-                            a.AddTime AddTime
-                        FROM
-                            CusCategorys(NOLOCK) a JOIN Record b
-                            ON a.Id=b.PId
-                        )
- 
-                        SELECT
-                            Id,
-                            Title,
-                            PId,
-                            Depth,
-                            Status,
-                            Weight,
-                            AddTime
-                        FROM
-                            Record
-                            WHERE Status=1
-                            ORDER BY Weight DESC
-     
-                        END";
+                    DROP FUNCTION IF EXISTS fn_queryParentCusCategory;
+                    CREATE FUNCTION fn_queryParentCusCategory(rootId INT)
+                    RETURNS VARCHAR(4000)
+                    BEGIN
+                    DECLARE sTemp VARCHAR(4000);
+                    DECLARE sTempChd VARCHAR(4000);
+
+                    SET sTemp='$';
+                    SET sTempChd = CAST(rootId AS CHAR);
+                    SET sTemp = CONCAT(sTemp,',',sTempChd);
+
+                    SELECT PID INTO sTempChd FROM CusCategorys WHERE ID = sTempChd;
+                    WHILE sTempChd <> 0 DO
+                    SET sTemp = CONCAT(sTemp,',',sTempChd);
+                    SELECT PID INTO sTempChd FROM CusCategorys WHERE ID = sTempChd;
+                    END WHILE;
+                    RETURN sTemp;
+                    END;";
+            //使用方法  SELECT fn_queryParentCusCategory(3);  SELECT* FROM CusCategorys WHERE FIND_IN_SET(ID, fn_queryParentCusCategory(3));
 
 
-            //获取所有子类的id，以逗号分割
-            string SQLFunGetChildCusCategoryStr = @"
-                        CREATE FUNCTION [dbo].[fn_GetChildCusCategoryStr] (@Id int) RETURNS varchar(1000) 
-                        AS
-                            BEGIN
-                        declare @a VARCHAR(1000);
-                        set @a='';
-                            WITH Record AS(
-                                SELECT
-                                Id,
-                                PID,
-		                            Status
-                            FROM
-                                CusCategorys(NOLOCK)
-                                WHERE Id=@Id
-                                UNION ALL
-                                    SELECT
-				                        a.Id Id,
-				                        a.PID PID,
-				                        a.Status Status
-                                    FROM
-                                        CusCategorys(NOLOCK) a JOIN Record b
-                                        ON a.PID=b.Id
-                                    )
-                        SELECT @a=isnull(@a+',','')+ltrim(Id) FROM Record  WHERE Status=1  
-                        return SUBSTRING(@a, 2, len(@a))
-                        END
-                        ";
-
-
-
-            //分割字符串，通用函数
-            string SQLSplitString = @"
-                CREATE function [dbo].[func_splitstring]
-                (@str nvarchar(max),@split varchar(10))
-                returns @t Table (c1 varchar(100))
-                as
-                begin
-	                if charindex(@split,@str) = 0
-	                begin
-		                insert @t(c1) values(@str)
-		                return
-	                end
-
-                    declare @i int
-                    declare @s int
-                    set @i=1
-                    set @s=1
-                    while(@i>0)
-                    begin    
-                        set @i=charindex(@split,@str,@s)
-                        if(@i>0)
-                        begin
-                            insert @t(c1) values(substring(@str,@s,@i-@s))
-                        end   
-                        else begin
-                            insert @t(c1) values(substring(@str,@s,len(@str)-@s+1))
-                        end
-                        set @s = @i + 1   
-                    end
-                    return
-                end
-                ";
-
-            //按照某一个Id查询它及它的所有父级成员存储过程
-            context.Database.ExecuteSqlCommand(SQLGetParentCusCategory);
-            //按照某一个Id查询它及它的所有子级成员存储过程
+            //按照某一个Id查询它及它的所有子级成员函数
             context.Database.ExecuteSqlCommand(SQLGetChildCusCategory);
-            //获取所有子类的id，以逗号分割
-            context.Database.ExecuteSqlCommand(SQLFunGetChildCusCategoryStr);
-            //分割字符串，通用函数
-            context.Database.ExecuteSqlCommand(SQLSplitString);
+            //按照某一个Id查询它及它的所有父级成员函数
+            context.Database.ExecuteSqlCommand(SQLGetParentCusCategory);
 
 
             #endregion

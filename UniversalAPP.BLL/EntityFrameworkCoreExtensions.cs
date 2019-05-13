@@ -17,11 +17,8 @@ namespace UniversalAPP.BLL
             connection = conn;
             conn.Open();
             var cmd = conn.CreateCommand();
-            if (facade.IsSqlServer())
-            {
-                cmd.CommandText = sql;
-                cmd.Parameters.AddRange(parameters);
-            }
+            cmd.CommandText = sql;
+            cmd.Parameters.AddRange(parameters);
             return cmd;
         }
 
@@ -51,8 +48,14 @@ namespace UniversalAPP.BLL
                 var t = new T();
                 foreach (PropertyInfo p in propertyInfos)
                 {
+                    var ss = p.PropertyType;
                     if (dt.Columns.IndexOf(p.Name) != -1 && row[p.Name] != DBNull.Value)
-                        p.SetValue(t, row[p.Name], null);
+                    {
+                        if (row[p.Name].GetType() == typeof(System.UInt64))
+                            p.SetValue(t, int.Parse(row[p.Name].ToString()) == 1, null);
+                        else
+                            p.SetValue(t, row[p.Name], null);
+                    }
                 }
                 list.Add(t);
             }

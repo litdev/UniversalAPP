@@ -1,7 +1,12 @@
+#### 此分支数据库为MySql版
+1. 安装MySql，[Win10Linux子系统](https://blog.csdn.net/weixin_39345384/article/details/80855359),[安装后有个问题要解决](https://www.cnblogs.com/cpl9412290130/p/9583868.html)，安装的版本是```5.7.25-0ubuntu0.18.04.2```,安装完毕后需要[更改编码为utf8mb4](https://www.cnblogs.com/rchao/p/9492167.html) ([Windows版本](https://blog.csdn.net/NikoZhao/article/details/79521812))，不然插入中文报错
+2. 一开始使用的是```MySql.Data.EntityFrameworkCore```V8.0.16这个Oracle官方版本，但是如果属性为Bool，则会报错```Unable to cast object of type 'System.Boolean' to type 'System.SByte'.```，据说是还未修复的bug，没办法改用```Pomelo.EntityFrameworkCore.MySql```V2.2.0,注意连接字符串中要有```TreatTinyAsBoolean=true``` [参考文章](https://blog.csdn.net/sxy_student/article/details/88171823)
+
 #### 项目初始化
-1. 当数据库不存在时，会自动进行迁移并插入一些基础数据(如添加一个后台管理账户)，所以下周源码后直接运行项目就行了
-2. 往后当有新的迁移(`add-migration xxx`)时，如果不进行手动迁移数据库(`update-database`)则访问网页会收到`HTTP Error 502.5 - ANCM Out-Of-Process Startup Failure`这个错误，如果项目本地直接连接线上服务器，则在`程序包管理器控制台`(默认项目选择：UniversalAPP.EFCore)进行`update-database`就行了。否则将`UniversalAPP.EFCoreMigrator`项目发布后放到服务器cmd中运行`dotnet UniversalAPP.EFCoreMigrator.dll`按照提示进行迁移(数据库连接字符串写死了，注意更改)。
-3. 附程序包管理器控制台中的迁移命令
+1. 当```Migrations```目录下```init```存在时，项目启动后会自动创建数据库并插入基础数据，如果不存在，则进行```add-migration init```后再运行项目(无需进行update)
+2. 当数据库不存在时，会自动进行迁移并插入一些基础数据(如添加一个后台管理账户)，所以下周源码后直接运行项目就行了
+3. 往后当有新的迁移(`add-migration xxx`)时，如果不进行手动迁移数据库(`update-database`)则访问网页会收到`HTTP Error 502.5 - ANCM Out-Of-Process Startup Failure`这个错误，如果项目本地直接连接线上服务器，则在`程序包管理器控制台`(默认项目选择：UniversalAPP.EFCore)进行`update-database`就行了。否则将`UniversalAPP.EFCoreMigrator`项目发布后放到服务器cmd中运行`dotnet UniversalAPP.EFCoreMigrator.dll`按照提示进行迁移(数据库连接字符串写死了，注意更改)。
+4. 附程序包管理器控制台中的迁移命令
 
 命令|描述|-
 -:|:-:|:-:

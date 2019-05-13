@@ -29,7 +29,7 @@ namespace UniversalAPP.Web.Controllers
 
         public IActionResult Index()
         {
-            _logger.LogDebug($"是否是开发环境下:{_env.IsDevelopment()}");
+            //_logger.LogDebug($"是否是开发环境下:{_env.IsDevelopment()}");
             return Content(_env.EnvironmentName + "-" + HttpContext.Connection.RemoteIpAddress.ToString());
         }
 

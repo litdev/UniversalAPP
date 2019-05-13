@@ -37,7 +37,7 @@ namespace UniversalAPP.EFCore
 
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(ConnectionString, p => p.UseRowNumberForPaging());
+                optionsBuilder.UseMySql(ConnectionString);
             }
         }
 
@@ -68,7 +68,6 @@ namespace UniversalAPP.EFCore
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //指定表名
-            //modelBuilder.Entity<Entity.AppVersion>().ToTable("AppVersion");
             modelBuilder.Entity<Entity.SysUser>().ToTable("SysUser");
         }
 
