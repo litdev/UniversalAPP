@@ -35,18 +35,13 @@ namespace UniversalAPP.Web.Areas.Admin.Controllers
         [AdminPermissionAttribute("后台用户", "后台用户列表")]
         public async Task<IActionResult> Index(int page = 1, int role = 0, string word = "")
         {
-            var CookieKeyPageSize = CookieKey_PageSize();
-            ViewData["CookieKey_PageSize"] = CookieKeyPageSize;
-            var CookieKeyOrderBy = CookieKey_OrderBy();
-            ViewData["CookieKey_OrderBy"] = CookieKeyOrderBy;
-
             word = Tools.WebHelper.UrlDecode(word);
             Models.ViewModelSysUserList response_model = new Models.ViewModelSysUserList();
             response_model.page = page;
             response_model.role = role;
             response_model.word = word;
-            response_model.page_size = Tools.TypeHelper.ObjectToInt(GetCookies(CookieKeyPageSize), GlobalKeyConfig.Admin_Default_PageSize);
-            string OrderBy = GetCookies(CookieKeyOrderBy);
+            response_model.page_size = Tools.TypeHelper.ObjectToInt(GetCookies(CookieKey_PageSize()), GlobalKeyConfig.Admin_Default_PageSize);
+            string OrderBy = GetCookies(CookieKey_OrderBy());
             if (string.IsNullOrWhiteSpace(OrderBy)) OrderBy = "RegTime desc";
             ViewData["OrderBy"] = OrderBy;
             Load();

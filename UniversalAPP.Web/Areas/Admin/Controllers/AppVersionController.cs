@@ -16,11 +16,6 @@ namespace UniversalAPP.Web.Areas.Admin.Controllers
         [AdminPermissionAttribute("App版本", "APP版本首页")]
         public async Task<IActionResult> Index(int page = 1, int platform = 0)
         {
-            var CookieKeyPageSize = CookieKey_PageSize();
-            ViewData["CookieKey_PageSize"] = CookieKeyPageSize;
-            var CookieKeyOrderBy = CookieKey_OrderBy();
-            ViewData["CookieKey_OrderBy"] = CookieKeyOrderBy;
-
             LoadPlatform();
 
             Models.ViewModelAppVersion response_model = new Models.ViewModelAppVersion();
@@ -28,8 +23,8 @@ namespace UniversalAPP.Web.Areas.Admin.Controllers
             response_model.platform = platform;
 
             //获取每页大小的Cookie
-            response_model.page_size = Tools.TypeHelper.ObjectToInt(GetCookies(CookieKeyPageSize), GlobalKeyConfig.Admin_Default_PageSize);
-            string OrderBy = GetCookies(CookieKeyOrderBy);
+            response_model.page_size = Tools.TypeHelper.ObjectToInt(GetCookies(CookieKey_PageSize()), GlobalKeyConfig.Admin_Default_PageSize);
+            string OrderBy = GetCookies(CookieKey_OrderBy());
             if (string.IsNullOrWhiteSpace(OrderBy)) OrderBy = "AddTime desc";
             ViewData["OrderBy"] = OrderBy;
 

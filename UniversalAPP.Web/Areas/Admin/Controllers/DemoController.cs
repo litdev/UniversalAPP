@@ -33,18 +33,13 @@ namespace UniversalAPP.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index(int page = 1, string word = "")
         {
-            var CookieKeyPageSize = CookieKey_PageSize();
-            ViewData["CookieKey_PageSize"] = CookieKeyPageSize;
-            var CookieKeyOrderBy = CookieKey_OrderBy();
-            ViewData["CookieKey_OrderBy"] = CookieKeyOrderBy;
-
             word = Tools.WebHelper.UrlDecode(word);
             Models.ViewModelDemoList response_model = new Models.ViewModelDemoList();
             response_model.page = page;
             response_model.word = word;
             //获取每页大小的Cookie
-            response_model.page_size = Tools.TypeHelper.ObjectToInt(GetCookies(CookieKeyPageSize), GlobalKeyConfig.Admin_Default_PageSize);
-            string OrderBy = GetCookies(CookieKeyOrderBy);
+            response_model.page_size = Tools.TypeHelper.ObjectToInt(GetCookies(CookieKey_PageSize()), GlobalKeyConfig.Admin_Default_PageSize);
+            string OrderBy = GetCookies(CookieKey_OrderBy());
             if (string.IsNullOrWhiteSpace(OrderBy)) OrderBy = "AddTime desc";
             ViewData["OrderBy"] = OrderBy;
 
