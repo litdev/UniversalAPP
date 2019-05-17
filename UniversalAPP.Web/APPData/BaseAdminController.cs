@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -20,6 +21,13 @@ namespace UniversalAPP.Web
             _env = hca.HttpContext.RequestServices.GetService<IHostingEnvironment>();
             _db_context = hca.HttpContext.RequestServices.GetService<EFCore.EFDBContext>();
 
+        }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            var controller = context.Controller as Controller;
+            controller.ViewData["CookieKey_PageSize"] = CookieKey_PageSize();
+            controller.ViewData["CookieKey_OrderBy"] = CookieKey_OrderBy();
         }
 
         /// <summary>
