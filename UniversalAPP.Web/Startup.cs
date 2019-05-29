@@ -61,7 +61,7 @@ namespace UniversalAPP.Web
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), p => p.UseRowNumberForPaging()));
 
             //MongoDB
-            services.AddScoped<MongoDB.Services.DemoService>();
+            //services.AddScoped<MongoDB.Services.DemoService>();
 
             #endregion
 
