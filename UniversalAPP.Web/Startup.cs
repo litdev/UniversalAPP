@@ -20,9 +20,6 @@ using Microsoft.AspNetCore.StaticFiles;
 
 namespace UniversalAPP.Web
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -59,8 +56,12 @@ namespace UniversalAPP.Web
 
             #region 数据库
 
+            //SQL Server
             services.AddDbContext<EFCore.EFDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), p => p.UseRowNumberForPaging()));
+
+            //MongoDB
+            services.AddScoped<MongoDB.Services.DemoService>();
 
             #endregion
 
