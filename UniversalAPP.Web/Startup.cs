@@ -59,8 +59,12 @@ namespace UniversalAPP.Web
 
             #region 数据库
 
+            //MySql
             services.AddDbContext<EFCore.EFDBContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("MySqlConnection")));
+
+            //MongoDB
+            //services.AddScoped<MongoDB.Services.DemoService>();
 
             #endregion
 
