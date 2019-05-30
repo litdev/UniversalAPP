@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.StaticFiles;
+using Hangfire.Dashboard.BasicAuthorization;
 
 namespace UniversalAPP.Web
 {
@@ -227,8 +228,7 @@ namespace UniversalAPP.Web
 
             ////Hangfire计划任务
             //app.UseHangfireServer();
-            //app.UseHangfireDashboard("/hangfire", new DashboardOptions { Authorization = new[] { new HangfireAuthorizationFilter() } });
-
+            //app.UseHangfireDashboard("/hangfire", new DashboardOptions { Authorization = new[] { new BasicAuthAuthorizationFilter(new BasicAuthAuthorizationFilterOptions { RequireSsl = false, SslRedirect = false, LoginCaseSensitive = true, Users = new[] { new BasicAuthAuthorizationUser { Login = "admin", PasswordClear = "admin" } } }) } });
             #endregion
 
             #region Swagger API文档生成
